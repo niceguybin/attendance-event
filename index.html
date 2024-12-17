@@ -1,12 +1,169 @@
 <!DOCTYPE html>
-<!-- saved from url=(0071)https://web-sandbox.oaiusercontent.com/index.html?isStorybook=undefined -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <title>sandbox</title>
-    <script type="module" crossorigin="" src="./index-BwhhviP5.js.다운로드"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-  
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>교보문고 영등포점 GOODBYE 2024, WELCOME 2025</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background-color: #f8f8f8;
+    }
 
-</body></html>
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 0;
+    }
+
+    main {
+      margin: 20px;
+    }
+
+    #calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin: 20px auto;
+      max-width: 400px;
+    }
+
+    .day {
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+      position: relative;
+    }
+
+    .present {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .benefit {
+      font-size: 10px;
+      color: #777;
+      position: absolute;
+      bottom: 3px;
+      right: 3px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    #menu-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      background-color: #e0e0e0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>교보문고 영등포점 GOODBYE 2024, WELCOME 2025</h1>
+    <p>2024년 12월 16일 ~ 2025년 1월 31일</p>
+  </header>
+
+  <div id="menu-bar">
+    <span>총 일수: <span id="total-days">0</span></span>
+    <span>출석 일수: <span id="attended-days">0</span></span>
+  </div>
+
+  <main>
+    <div id="calendar"></div>
+    <button id="attendance-btn">출석하기</button>
+    <p id="status-message"></p>
+  </main>
+
+  <footer>
+    <p>이벤트 규칙 | 문의사항</p>
+  </footer>
+
+  <script>
+    const calendar = document.getElementById("calendar");
+    const btn = document.getElementById("attendance-btn");
+    const statusMessage = document.getElementById("status-message");
+    const totalDaysDisplay = document.getElementById("total-days");
+    const attendedDaysDisplay = document.getElementById("attended-days");
+
+    const startDate = new Date("2024-12-16");
+    const endDate = new Date("2025-01-31");
+    const attendanceDays = JSON.parse(localStorage.getItem("attendanceDays")) || [];
+
+    const benefits = {
+      3: "도서 10% 할인", // 수요일
+      4: "문구 10% 할인", // 목요일
+      5: "도서교환권 1000원 증정" // 금요일
+    };
+
+    function getDayBenefit(day) {
+      return benefits[day] || "";
+    }
+
+    function generateCalendar() {
+      calendar.innerHTML = "";
+      let totalDays = 0;
+      let attendedDays = attendanceDays.length;
+
+      for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+        totalDays++;
+        const day = document.createElement("div");
+        day.classList.add("day");
+        const dayOfWeek = date.getDay();
+        const dateString = date.toISOString().split("T")[0];
+
+        day.textContent = date.toLocaleDateString("ko-KR", { day: "numeric" });
+        if (attendanceDays.includes(dateString)) {
+          day.classList.add("present");
+        }
+
+        const benefit = getDayBenefit(dayOfWeek);
+        if (benefit) {
+          const benefitTag = document.createElement("div");
+          benefitTag.classList.add("benefit");
+          benefitTag.textContent = benefit;
+          day.appendChild(benefitTag);
+        }
+
+        calendar.appendChild(day);
+      }
+      totalDaysDisplay.textContent = totalDays;
+      attendedDaysDisplay.textContent = attendedDays;
+    }
+
+    btn.addEventListener("click", () => {
+      const today = new Date().toISOString().split("T")[0];
+      if (!attendanceDays.includes(today)) {
+        attendanceDays.push(today);
+        localStorage.setItem("attendanceDays", JSON.stringify(attendanceDays));
+        statusMessage.textContent = "출석 완료!";
+        generateCalendar();
+        btn.disabled = true;
+      } else {
+        statusMessage.textContent = "이미 출석하셨습니다!";
+      }
+    });
+
+    generateCalendar();
+  </script>
+</body>
+</html>
