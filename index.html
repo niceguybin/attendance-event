@@ -17,7 +17,7 @@
     header {
       background-color: #4CAF50;
       color: white;
-      padding: 10px 0;
+      padding: 5px 0;
     }
 
     h1 span {
@@ -37,23 +37,25 @@
     }
 
     main {
-      margin: 20px;
+      margin: 10px;
     }
 
     #calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      margin: 20px auto;
-      max-width: 400px;
+      gap: 2px;
+      margin: 10px auto;
+      max-width: 100%;
+      font-size: 12px;
     }
 
     .day {
       border: 1px solid #ddd;
-      padding: 5px;
-      border-radius: 5px;
+      padding: 3px;
+      border-radius: 3px;
       background-color: #fff;
       position: relative;
+      height: 50px;
     }
 
     .present {
@@ -62,17 +64,19 @@
     }
 
     .benefit {
-      font-size: 12px;
+      font-size: 10px;
       color: #555;
-      margin-top: 5px;
+      margin-top: 2px;
+      text-align: center;
       border-top: 1px dashed #ccc;
-      padding-top: 5px;
+      padding-top: 2px;
     }
 
     .day-header {
       font-weight: bold;
       background-color: #e0e0e0;
-      padding: 10px;
+      padding: 5px 0;
+      font-size: 12px;
       border: 1px solid #ddd;
     }
 
@@ -95,27 +99,29 @@
     #menu-bar {
       display: flex;
       justify-content: space-around;
-      padding: 10px 0;
+      padding: 5px 0;
       background-color: #e0e0e0;
       font-weight: bold;
+      font-size: 12px;
     }
 
     .notice {
       background-color: #fff;
       border: 1px solid #ddd;
-      padding: 15px;
-      margin: 20px auto;
+      padding: 10px;
+      margin: 10px auto;
       text-align: left;
-      max-width: 400px;
+      font-size: 10px;
+      max-width: 350px;
     }
 
     button {
-      padding: 10px 20px;
-      font-size: 16px;
+      padding: 5px 10px;
+      font-size: 12px;
       background-color: #4CAF50;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 3px;
       cursor: pointer;
     }
 
@@ -132,7 +138,7 @@
       <span class="goodbye2024">GOODBYE 2024</span>
       <span class="welcome2025">WELCOME 2025</span>
     </h1>
-    <p>2024년 12월 16일 ~ 2025년 1월 31일</p>
+    <p style="font-size: 12px;">2024년 12월 16일 ~ 2025년 1월 31일</p>
   </header>
 
   <div id="menu-bar">
@@ -164,7 +170,7 @@
   </div>
 
   <footer>
-    <p>문의사항</p>
+    <p style="font-size: 10px;">문의사항</p>
   </footer>
 
   <script>
@@ -206,7 +212,7 @@
         const dateString = date.toISOString().split("T")[0];
 
         const dayNumber = document.createElement("div");
-        dayNumber.textContent = date.toLocaleDateString("ko-KR", { day: "numeric" });
+        dayNumber.textContent = date.getDate();
         day.appendChild(dayNumber);
 
         if (attendanceDays.includes(dateString)) {
