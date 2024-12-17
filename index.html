@@ -24,6 +24,13 @@
       display: block;
     }
 
+    .test-header {
+      font-size: 14px;
+      margin: 5px 0;
+      color: red;
+      font-weight: bold;
+    }
+
     .kyobo {
       color: white;
     }
@@ -37,14 +44,14 @@
     }
 
     main {
-      margin: 10px;
+      margin: 5px;
     }
 
     #calendar {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 2px;
-      margin: 10px auto;
+      margin: 5px auto 0;
       max-width: 100%;
       font-size: 12px;
     }
@@ -55,21 +62,14 @@
       border-radius: 3px;
       background-color: #fff;
       position: relative;
-      height: 50px;
+      height: 45px;
     }
 
-    .present {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    .benefit {
+    .day .double-attendance {
       font-size: 10px;
-      color: #555;
-      margin-top: 2px;
-      text-align: center;
-      border-top: 1px dashed #ccc;
-      padding-top: 2px;
+      color: red;
+      margin-top: 3px;
+      font-weight: bold;
     }
 
     .day-header {
@@ -105,16 +105,6 @@
       font-size: 12px;
     }
 
-    .notice {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      padding: 10px;
-      margin: 10px auto;
-      text-align: left;
-      font-size: 10px;
-      max-width: 350px;
-    }
-
     button {
       padding: 5px 10px;
       font-size: 12px;
@@ -133,17 +123,17 @@
 </head>
 <body>
   <header>
+    <p class="test-header">테스트 페이지 입니다</p>
     <h1>
       <span class="kyobo">교보문고 영등포점</span>
       <span class="goodbye2024">GOODBYE 2024</span>
       <span class="welcome2025">WELCOME 2025</span>
     </h1>
-    <p style="font-size: 12px;">2024년 12월 16일 ~ 2025년 1월 31일</p>
   </header>
 
   <div id="menu-bar">
-    <span>총 <span id="total-days">0</span></span>
-    <span>출석 <span id="attended-days">0</span></span>
+    <span>총 출석일: <span id="total-days">0</span></span>
+    <span>출석 완료: <span id="attended-days">0</span></span>
   </div>
 
   <main>
@@ -160,19 +150,6 @@
     <p id="status-message"></p>
   </main>
 
-  <div class="notice">
-    <h3>주의사항</h3>
-    <ul>
-      <li>요일별 혜택은 당일 사용 가능합니다.</li>
-      <li>일부 도서 및 문구류 사용 불가합니다.</li>
-      <li>바로드림 및 중복 혜택은 불가합니다.</li>
-    </ul>
-  </div>
-
-  <footer>
-    <p style="font-size: 10px;">문의사항</p>
-  </footer>
-
   <script>
     const calendar = document.getElementById("calendar");
     const btn = document.getElementById("attendance-btn");
@@ -184,73 +161,36 @@
     const endDate = new Date("2025-01-31");
     const attendanceDays = JSON.parse(localStorage.getItem("attendanceDays")) || [];
 
-    const benefits = {
-      3: "도서 10% 할인", // 수요일
-      4: "문구 10% 할인", // 목요일
-      5: "도서교환권 1000원 증정" // 금요일
-    };
-
-    function getDayBenefit(day) {
-      return benefits[day] || "";
-    }
-
     function generateCalendar() {
       const dayHeaders = document.querySelectorAll(".day-header");
       calendar.innerHTML = "";
-
-      // 요일 헤더 재생성
       dayHeaders.forEach(header => calendar.appendChild(header.cloneNode(true)));
 
-      let totalDays = 0;
-      let attendedDays = attendanceDays.length;
-
+      let totalAttendanceDays = 0;
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-        totalDays++;
         const day = document.createElement("div");
         day.classList.add("day");
         const dayOfWeek = date.getDay();
-        const dateString = date.toISOString().split("T")[0];
-
         const dayNumber = document.createElement("div");
         dayNumber.textContent = date.getDate();
         day.appendChild(dayNumber);
 
-        if (attendanceDays.includes(dateString)) {
-          day.classList.add("present");
-        }
-
-        if (dayOfWeek === 6) {
-          day.classList.add("saturday");
-        } else if (dayOfWeek === 0) {
-          day.classList.add("sunday");
-        }
-
-        const benefit = getDayBenefit(dayOfWeek);
-        if (benefit) {
-          const benefitTag = document.createElement("div");
-          benefitTag.classList.add("benefit");
-          benefitTag.textContent = benefit;
-          day.appendChild(benefitTag);
+        if (dayOfWeek === 6 || dayOfWeek === 0 || date.getDate() === 25 || date.getDate() === 1) {
+          const doubleAttendance = document.createElement("div");
+          doubleAttendance.classList.add("double-attendance");
+          doubleAttendance.textContent = "출석 X2";
+          day.appendChild(doubleAttendance);
+          totalAttendanceDays += 2;
+        } else {
+          totalAttendanceDays += 1;
         }
 
         calendar.appendChild(day);
       }
-      totalDaysDisplay.textContent = totalDays;
-      attendedDaysDisplay.textContent = attendedDays;
-    }
 
-    btn.addEventListener("click", () => {
-      const today = new Date().toISOString().split("T")[0];
-      if (!attendanceDays.includes(today)) {
-        attendanceDays.push(today);
-        localStorage.setItem("attendanceDays", JSON.stringify(attendanceDays));
-        statusMessage.textContent = "출석 완료!";
-        generateCalendar();
-        btn.disabled = true;
-      } else {
-        statusMessage.textContent = "이미 출석하셨습니다!";
-      }
-    });
+      totalDaysDisplay.textContent = totalAttendanceDays;
+      attendedDaysDisplay.textContent = attendanceDays.length;
+    }
 
     generateCalendar();
   </script>
