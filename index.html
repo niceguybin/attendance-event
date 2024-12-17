@@ -195,6 +195,7 @@
     const endDate = new Date("2025-01-31");
     let totalAttendanceDays = 0;
     let attendedDays = 0;
+    let checkedToday = false;
 
     function generateCalendar() {
       calendar.innerHTML = "";
@@ -238,12 +239,17 @@
     }
 
     attendanceButton.addEventListener("click", () => {
+      if (checkedToday) {
+        alert("오늘 출석체크가 완료되었습니다!");
+        return;
+      }
       const input = prompt("직원 확인: 인증번호를 입력하세요");
       if (input === "036") {
         alert("출석체크가 완료되었습니다!");
         attendedDays++;
         attendedDaysDisplay.textContent = attendedDays;
         markAttendance();
+        checkedToday = true;
       } else {
         alert("인증번호가 틀렸습니다. 다시 시도해주세요.");
       }
