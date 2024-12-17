@@ -37,10 +37,12 @@
 
     .goodbye2024 {
       color: #9BB7D4;
+      font-weight: bold;
     }
 
     .welcome2025 {
       color: #E6A57E;
+      font-weight: bold;
     }
 
     .top-menu {
@@ -211,6 +213,9 @@
         const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
+        if (dayOfWeek === 3 && day.dataset.date !== "2024-12-25" && day.dataset.date !== "2025-01-01") day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>문구 1000원 즉시 할인</div>`;
+        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>도서 1000원 즉시 할인</div>`;
         if (dayOfWeek === 6 || dayOfWeek === 0) day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
         if (day.dataset.date === "2024-12-25" || day.dataset.date === "2025-01-01") day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
 
@@ -240,14 +245,4 @@
         } else {
           attendedDays.push(today);
         }
-        localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
-        generateCalendar();
-      } else {
-        alert("인증번호가 틀렸습니다. 다시 시도해주세요.");
-      }
-    });
-
-    generateCalendar();
-  </script>
-</body>
-</html>
+        local
