@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -211,7 +211,12 @@
         const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
-        if (dayOfWeek === 6 || dayOfWeek === 0) {
+        if (dayOfWeek === 3 && day.dataset.date !== "2024-12-25" && day.dataset.date !== "2025-01-01") {
+          day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+        }
+        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서 1,000원 즉시할인</div>`;
+        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 즉시할인</div>`;
+        if (dayOfWeek === 6 || dayOfWeek === 0 || day.dataset.date === "2024-12-25" || day.dataset.date === "2025-01-01") {
           day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
         }
 
@@ -219,8 +224,8 @@
           day.classList.add("checked");
           day.innerHTML += `<div>출석 완료</div>`;
         }
-
-        calendar.appendChild(day);
+        calendar.append
+                calendar.appendChild(day);
       }
       attendedDaysDisplay.textContent = attendedDays.length;
     }
@@ -250,3 +255,4 @@
     generateCalendar();
   </script>
 </body>
+</html>
