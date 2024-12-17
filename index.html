@@ -73,9 +73,23 @@
       height: 45px;
     }
 
-    .day .double-attendance, .day .benefit {
+    .day .double-attendance {
       font-size: 10px;
       color: red;
+      margin-top: 3px;
+      font-weight: bold;
+    }
+
+    .day .benefit {
+      font-size: 10px;
+      color: green;
+      margin-top: 3px;
+      font-weight: bold;
+    }
+
+    .day .checked {
+      font-size: 10px;
+      color: #4CAF50;
       margin-top: 3px;
       font-weight: bold;
     }
@@ -164,17 +178,18 @@
       <div class="day-header">토</div>
       <div class="day-header">일</div>
     </div>
+    <button id="attendance-btn">출석체크</button>
   </main>
 
   <div class="notice">
     <h3>주의사항</h3>
     <ul>
-      <li>수요일: 도서 10% 할인</li>
-      <li>목요일: 문구 10% 할인</li>
-      <li>금요일: 도서교환권 1000원 증정</li>
       <li>요일별 혜택은 당일 사용 가능합니다.</li>
       <li>일부 도서 및 문구류 사용 불가합니다.</li>
       <li>바로드림 및 중복 혜택은 불가합니다.</li>
+      <li>5회 출석시 사은품 A 증정</li>
+      <li>7회 출석시 사은품 B 증정</li>
+      <li>10회 출석시 사은품 C 증정</li>
     </ul>
   </div>
 
@@ -182,12 +197,16 @@
     const calendar = document.getElementById("calendar");
     const totalDaysDisplay = document.getElementById("total-days");
     const attendedDaysDisplay = document.getElementById("attended-days");
+    const attendanceButton = document.getElementById("attendance-btn");
     const startDate = new Date("2024-12-16");
     const endDate = new Date("2025-01-31");
     let totalAttendanceDays = 0;
+    let attendedDays = 0;
 
     function generateCalendar() {
       calendar.innerHTML = "";
+      totalAttendanceDays = 0;
+      attendedDays = 0;
 
       const dayHeaders = ["월", "화", "수", "목", "금", "토", "일"];
       dayHeaders.forEach(day => {
@@ -204,21 +223,29 @@
         const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
+        if ((date.getMonth() === 11 && date.getDate() === 25) || (date.getMonth() === 0 && date.getDate() === 1)) {
+          day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
+        }
+
         if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
         if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>문구 10% 할인</div>`;
         if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>도서교환권 1000원</div>`;
-
-        if (dayOfWeek === 6 || dayOfWeek === 0 || (date.getMonth() === 11 && date.getDate() === 25) || (date.getMonth() === 0 && date.getDate() === 1)) {
-          day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
-          totalAttendanceDays += 2;
-        } else {
-          totalAttendanceDays += 1;
-        }
 
         calendar.appendChild(day);
       }
       totalDaysDisplay.textContent = totalAttendanceDays;
     }
+
+    attendanceButton.addEventListener("click", () => {
+      const input = prompt("직원 확인: 인증번호를 입력하세요");
+      if (input === "036") {
+        alert("출석체크가 완료되었습니다!");
+        attendedDays++;
+        attendedDaysDisplay.textContent = attendedDays;
+      } else {
+        alert("인증번호가 틀렸습니다. 다시 시도해주세요.");
+      }
+    });
 
     generateCalendar();
   </script>
