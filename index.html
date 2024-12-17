@@ -53,6 +53,29 @@
       right: 3px;
     }
 
+    .day-header {
+      font-weight: bold;
+      background-color: #e0e0e0;
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+
+    .day-header:nth-child(6) {
+      color: blue;
+    }
+
+    .day-header:nth-child(7) {
+      color: red;
+    }
+
+    .day.saturday {
+      color: blue;
+    }
+
+    .day.sunday {
+      color: red;
+    }
+
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -89,7 +112,15 @@
   </div>
 
   <main>
-    <div id="calendar"></div>
+    <div id="calendar">
+      <div class="day-header">월</div>
+      <div class="day-header">화</div>
+      <div class="day-header">수</div>
+      <div class="day-header">목</div>
+      <div class="day-header">금</div>
+      <div class="day-header">토</div>
+      <div class="day-header">일</div>
+    </div>
     <button id="attendance-btn">출석하기</button>
     <p id="status-message"></p>
   </main>
@@ -120,7 +151,12 @@
     }
 
     function generateCalendar() {
+      const dayHeaders = document.querySelectorAll(".day-header");
       calendar.innerHTML = "";
+
+      // 요일 헤더 재생성
+      dayHeaders.forEach(header => calendar.appendChild(header.cloneNode(true)));
+
       let totalDays = 0;
       let attendedDays = attendanceDays.length;
 
@@ -134,6 +170,12 @@
         day.textContent = date.toLocaleDateString("ko-KR", { day: "numeric" });
         if (attendanceDays.includes(dateString)) {
           day.classList.add("present");
+        }
+
+        if (dayOfWeek === 6) {
+          day.classList.add("saturday");
+        } else if (dayOfWeek === 0) {
+          day.classList.add("sunday");
         }
 
         const benefit = getDayBenefit(dayOfWeek);
