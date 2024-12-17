@@ -168,8 +168,8 @@
       <div class="day-header">수</div>
       <div class="day-header">목</div>
       <div class="day-header">금</div>
-      <div class="day-header">토</div>
-      <div class="day-header">일</div>
+      <div class="day-header" style="color: blue;">토</div>
+      <div class="day-header" style="color: red;">일</div>
     </div>
     <button id="attendance-btn">출석체크</button>
   </main>
@@ -206,6 +206,9 @@
         const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
+        if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>문구 1000원 할인</div>`;
+        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>도서 1000원 할인</div>`;
         if (dayOfWeek === 6 || dayOfWeek === 0 || day.dataset.date === "2024-12-25" || day.dataset.date === "2025-01-01") {
           day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
         }
