@@ -26,7 +26,7 @@
 
     .test-header {
       font-size: 14px;
-      margin: 5px 0;
+      margin: 10px 0;
       color: red;
       font-weight: bold;
     }
@@ -46,14 +46,14 @@
     .top-menu {
       display: flex;
       justify-content: space-around;
-      background-color: #e0e0e0;
+      background-color: black;
       padding: 10px 0;
-      margin-bottom: 10px;
+      margin-bottom: 0;
     }
 
     .top-menu a {
       text-decoration: none;
-      color: #333;
+      color: white;
       font-weight: bold;
     }
 
@@ -89,6 +89,12 @@
       color: green;
       font-weight: bold;
       margin-top: 3px;
+    }
+
+    .day.checked {
+      background-color: #c8f7c5;
+      color: green;
+      font-weight: bold;
     }
 
     .day-header {
@@ -134,20 +140,21 @@
   </style>
 </head>
 <body>
+  <nav class="top-menu">
+    <a href="https://kiosk.kyobobook.co.kr/main?site=036" target="_blank">무인검색</a>
+    <a href="https://kyoboydp.modoo.at/?link=djbtcifp" target="_blank">매장안내도</a>
+    <a href="https://kyoboydp.modoo.at/?link=5e4qizls" target="_blank">영등포점 Q&A</a>
+  </nav>
+
+  <p class="test-header">테스트 페이지 입니다</p>
+
   <header>
-    <p class="test-header">테스트 페이지 입니다</p>
     <h1>
       <span class="kyobo">교보문고 영등포점</span>
       <span class="goodbye2024">GOODBYE 2024</span>
       <span class="welcome2025">WELCOME 2025</span>
     </h1>
   </header>
-
-  <nav class="top-menu">
-    <a href="https://kiosk.kyobobook.co.kr/main?site=036" target="_blank">무인검색</a>
-    <a href="https://kyoboydp.modoo.at/?link=djbtcifp" target="_blank">매장안내도</a>
-    <a href="https://kyoboydp.modoo.at/?link=5e4qizls" target="_blank">영등포점 Q&A</a>
-  </nav>
 
   <div id="menu-bar">
     <span>총 출석일: <span id="total-days">0</span></span>
@@ -203,6 +210,7 @@
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
+        day.dataset.date = date.toISOString().split('T')[0];
         const dayOfWeek = date.getDay();
 
         day.innerHTML = `<div>${date.getDate()}</div>`;
@@ -235,10 +243,22 @@
         alert("출석체크가 완료되었습니다!");
         attendedDays++;
         attendedDaysDisplay.textContent = attendedDays;
+        markAttendance();
       } else {
         alert("인증번호가 틀렸습니다. 다시 시도해주세요.");
       }
     });
+
+    function markAttendance() {
+      const today = new Date().toISOString().split('T')[0];
+      const dayElements = document.querySelectorAll(".day");
+      dayElements.forEach(day => {
+        if (day.dataset.date === today) {
+          day.classList.add("checked");
+          day.innerHTML += `<div>출석 완료</div>`;
+        }
+      });
+    }
 
     generateCalendar();
   </script>
