@@ -235,14 +235,4 @@
 
       if (attendedDays.includes(today)) {
         alert("오늘 출석체크가 완료되었습니다!");
-        return;
-      }
-
-      const input = prompt("직원 확인: 인증번호를 입력하세요");
-      if (input === "036") {
-        if (dayOfWeek === 6 || dayOfWeek === 0 || today === "2024-12-25" || today === "2025-01-01") {
-          attendedDays.push(today, today); // 출석 X2
-        } else {
-          attendedDays.push(today);
-        }
-        local
+        return
