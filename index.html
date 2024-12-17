@@ -194,7 +194,16 @@
     let attendedDays = localStorage.getItem("attendedDays") ? JSON.parse(localStorage.getItem("attendedDays")) : [];
 
     function generateCalendar() {
-      calendar.innerHTML = "";
+      calendar.innerHTML = `
+        <div class="day-header">월</div>
+        <div class="day-header">화</div>
+        <div class="day-header">수</div>
+        <div class="day-header">목</div>
+        <div class="day-header">금</div>
+        <div class="day-header" style="color: blue;">토</div>
+        <div class="day-header" style="color: red;">일</div>
+      `;
+
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
@@ -202,9 +211,13 @@
         const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
+        if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>문구 1000원 할인</div>`;
+        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>도서 1000원 할인</div>`;
         if (day.dataset.date === "2024-12-25" || day.dataset.date === "2025-01-01") {
           day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
         }
+
         if (attendedDays.includes(day.dataset.date)) {
           day.classList.add("checked");
           day.innerHTML += `<div>출석 완료</div>`;
