@@ -12,12 +12,19 @@
       padding: 0;
       text-align: center;
       background-color: #f8f8f8;
+      max-width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     header {
       background-color: #4CAF50;
       color: white;
       padding: 5px 0;
+      width: 61.8%;
     }
 
     h1 span {
@@ -45,6 +52,7 @@
 
     main {
       margin: 5px;
+      width: 61.8%;
     }
 
     #calendar {
@@ -65,7 +73,7 @@
       height: 45px;
     }
 
-    .day .double-attendance {
+    .day .double-attendance, .day .benefit {
       font-size: 10px;
       color: red;
       margin-top: 3px;
@@ -103,6 +111,16 @@
       background-color: #e0e0e0;
       font-weight: bold;
       font-size: 12px;
+    }
+
+    .notice {
+      background-color: #fff;
+      padding: 10px;
+      font-size: 12px;
+      margin-top: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+      width: 61.8%;
     }
 
     button {
@@ -146,40 +164,52 @@
       <div class="day-header">토</div>
       <div class="day-header">일</div>
     </div>
-    <button id="attendance-btn">출석하기</button>
-    <p id="status-message"></p>
   </main>
+
+  <div class="notice">
+    <h3>주의사항</h3>
+    <ul>
+      <li>수요일: 도서 10% 할인</li>
+      <li>목요일: 문구 10% 할인</li>
+      <li>금요일: 도서교환권 1000원 증정</li>
+      <li>요일별 혜택은 당일 사용 가능합니다.</li>
+      <li>일부 도서 및 문구류 사용 불가합니다.</li>
+      <li>바로드림 및 중복 혜택은 불가합니다.</li>
+    </ul>
+  </div>
 
   <script>
     const calendar = document.getElementById("calendar");
-    const btn = document.getElementById("attendance-btn");
-    const statusMessage = document.getElementById("status-message");
     const totalDaysDisplay = document.getElementById("total-days");
     const attendedDaysDisplay = document.getElementById("attended-days");
-
     const startDate = new Date("2024-12-16");
     const endDate = new Date("2025-01-31");
-    const attendanceDays = JSON.parse(localStorage.getItem("attendanceDays")) || [];
+    let totalAttendanceDays = 0;
 
     function generateCalendar() {
-      const dayHeaders = document.querySelectorAll(".day-header");
       calendar.innerHTML = "";
-      dayHeaders.forEach(header => calendar.appendChild(header.cloneNode(true)));
 
-      let totalAttendanceDays = 0;
+      const dayHeaders = ["월", "화", "수", "목", "금", "토", "일"];
+      dayHeaders.forEach(day => {
+        const header = document.createElement("div");
+        header.classList.add("day-header");
+        header.textContent = day;
+        calendar.appendChild(header);
+      });
+
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
-        const dayOfWeek = date.getDay();
-        const dayNumber = document.createElement("div");
-        dayNumber.textContent = date.getDate();
-        day.appendChild(dayNumber);
 
-        if (dayOfWeek === 6 || dayOfWeek === 0 || date.getDate() === 25 || date.getDate() === 1) {
-          const doubleAttendance = document.createElement("div");
-          doubleAttendance.classList.add("double-attendance");
-          doubleAttendance.textContent = "출석 X2";
-          day.appendChild(doubleAttendance);
+        const dayOfWeek = date.getDay();
+        day.innerHTML = `<div>${date.getDate()}</div>`;
+
+        if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>문구 10% 할인</div>`;
+        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>도서교환권 1000원</div>`;
+
+        if (dayOfWeek === 6 || dayOfWeek === 0 || (date.getMonth() === 11 && date.getDate() === 25) || (date.getMonth() === 0 && date.getDate() === 1)) {
+          day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
           totalAttendanceDays += 2;
         } else {
           totalAttendanceDays += 1;
@@ -187,9 +217,7 @@
 
         calendar.appendChild(day);
       }
-
       totalDaysDisplay.textContent = totalAttendanceDays;
-      attendedDaysDisplay.textContent = attendanceDays.length;
     }
 
     generateCalendar();
