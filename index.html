@@ -195,19 +195,10 @@
     const endDate = new Date("2025-01-31");
     let totalAttendanceDays = 0;
     let attendedDays = localStorage.getItem("attendedDays") ? JSON.parse(localStorage.getItem("attendedDays")) : [];
-    let checkedToday = attendedDays.includes(new Date().toISOString().split('T')[0]);
 
     function generateCalendar() {
       calendar.innerHTML = "";
-      totalAttendanceDays = 0;
-      const dayHeaders = ["월", "화", "수", "목", "금", "토", "일"];
-      dayHeaders.forEach(day => {
-        const header = document.createElement("div");
-        header.classList.add("day-header");
-        header.textContent = day;
-        calendar.appendChild(header);
-      });
-
+      const today = new Date().toISOString().split('T')[0];
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
@@ -215,10 +206,15 @@
         const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
+        if (dayOfWeek === 6 || dayOfWeek === 0 || day.dataset.date === "2024-12-25" || day.dataset.date === "2025-01-01") {
+          day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
+        }
+
         if (attendedDays.includes(day.dataset.date)) {
           day.classList.add("checked");
           day.innerHTML += `<div>출석 완료</div>`;
         }
+
         calendar.appendChild(day);
       }
       attendedDaysDisplay.textContent = attendedDays.length;
@@ -230,10 +226,16 @@
         alert("오늘 출석체크가 완료되었습니다!");
         return;
       }
+
       const input = prompt("직원 확인: 인증번호를 입력하세요");
       if (input === "036") {
-        alert("출석체크가 완료되었습니다!");
-        attendedDays.push(today);
+        const dayOfWeek = new Date().getDay();
+        if (dayOfWeek === 6 || dayOfWeek === 0 || today === "2024-12-25" || today === "2025-01-01") {
+          attendedDays.push(today);
+          attendedDays.push(today); // X2 처리
+        } else {
+          attendedDays.push(today);
+        }
         localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
         generateCalendar();
       } else {
