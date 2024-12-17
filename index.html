@@ -43,6 +43,20 @@
       color: #E6A57E;
     }
 
+    .top-menu {
+      display: flex;
+      justify-content: space-around;
+      background-color: #e0e0e0;
+      padding: 10px 0;
+      margin-bottom: 10px;
+    }
+
+    .top-menu a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
     main {
       margin: 10px auto;
       max-width: 350px;
@@ -70,11 +84,11 @@
       margin-top: 3px;
     }
 
-    .day .checked {
+    .day .benefit {
       font-size: 10px;
-      color: #4CAF50;
-      margin-top: 3px;
+      color: green;
       font-weight: bold;
+      margin-top: 3px;
     }
 
     .day-header {
@@ -128,6 +142,12 @@
       <span class="welcome2025">WELCOME 2025</span>
     </h1>
   </header>
+
+  <nav class="top-menu">
+    <a href="https://kiosk.kyobobook.co.kr/main?site=036" target="_blank">무인검색</a>
+    <a href="https://kyoboydp.modoo.at/?link=djbtcifp" target="_blank">매장안내도</a>
+    <a href="https://kyoboydp.modoo.at/?link=5e4qizls" target="_blank">영등포점 Q&A</a>
+  </nav>
 
   <div id="menu-bar">
     <span>총 출석일: <span id="total-days">0</span></span>
@@ -189,6 +209,15 @@
         if ((date.getMonth() === 11 && date.getDate() === 25) || (date.getMonth() === 0 && date.getDate() === 1)) {
           day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
           totalAttendanceDays += 2;
+        } else if (dayOfWeek === 3) {
+          day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+          totalAttendanceDays += 1;
+        } else if (dayOfWeek === 4) {
+          day.innerHTML += `<div class='benefit'>문구 1000원 할인</div>`;
+          totalAttendanceDays += 1;
+        } else if (dayOfWeek === 5) {
+          day.innerHTML += `<div class='benefit'>도서 1000원 할인</div>`;
+          totalAttendanceDays += 1;
         } else if (dayOfWeek === 6 || dayOfWeek === 0) {
           day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
           totalAttendanceDays += 2;
