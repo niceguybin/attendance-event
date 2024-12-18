@@ -1,4 +1,4 @@
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -192,6 +192,7 @@
     const startDate = new Date("2024-12-16");
     const endDate = new Date("2025-01-31");
     let attendedDays = localStorage.getItem("attendedDays") ? JSON.parse(localStorage.getItem("attendedDays")) : [];
+    let lastCheckDate = localStorage.getItem("lastCheckDate") || "";
 
     function generateCalendar() {
       calendar.innerHTML = `
@@ -208,45 +209,32 @@
         const day = document.createElement("div");
         day.classList.add("day");
         day.dataset.date = date.toISOString().split('T')[0];
-        const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
-
-        if (dayOfWeek === 3 && day.dataset.date !== "2024-12-25" && day.dataset.date !== "2025-01-01") {
-          day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
-        }
-        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서 1,000원 즉시할인</div>`;
-        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 즉시할인</div>`;
-        if (dayOfWeek === 6 || dayOfWeek === 0 || day.dataset.date === "2024-12-25" || day.dataset.date === "2025-01-01") {
-          day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
-        }
 
         if (attendedDays.includes(day.dataset.date)) {
           day.classList.add("checked");
           day.innerHTML += `<div>출석 완료</div>`;
         }
-        calendar.append
-                calendar.appendChild(day);
+        calendar.appendChild(day);
       }
       attendedDaysDisplay.textContent = attendedDays.length;
     }
 
     attendanceButton.addEventListener("click", () => {
       const today = new Date().toISOString().split('T')[0];
-      const dayOfWeek = new Date().getDay();
-      if (attendedDays.includes(today)) {
-        alert("오늘 출석체크가 완료되었습니다!");
+      if (today === lastCheckDate) {
+        alert("오늘 출석체크는 이미 완료되었습니다. 다음날 00:00시 이후에 다시 체크하세요.");
         return;
       }
 
       const input = prompt("직원 확인: 인증번호를 입력하세요");
       if (input === "036") {
-        if (dayOfWeek === 6 || dayOfWeek === 0 || today === "2024-12-25" || today === "2025-01-01") {
-          attendedDays.push(today, today); // 출석 X2 처리
-        } else {
-          attendedDays.push(today);
-        }
+        attendedDays.push(today);
         localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
+        localStorage.setItem("lastCheckDate",
+        localStorage.setItem("lastCheckDate", today);
         generateCalendar();
+        alert("출석체크가 완료되었습니다!");
       } else {
         alert("인증번호가 틀렸습니다. 다시 시도해주세요.");
       }
