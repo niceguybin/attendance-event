@@ -208,7 +208,13 @@
         const day = document.createElement("div");
         day.classList.add("day");
         day.dataset.date = date.toISOString().split('T')[0];
+        const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
+
+        if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서 1,000원 즉시할인</div>`;
+        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 즉시할인</div>`;
+        if (dayOfWeek === 6 || dayOfWeek === 0) day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
 
         if (attendedDays.includes(day.dataset.date)) {
           day.classList.add("checked");
@@ -220,8 +226,10 @@
       attendedDaysDisplay.textContent = attendedDays.length;
     }
 
+    attendanceButton.addEvent
     attendanceButton.addEventListener("click", () => {
       const today = new Date().toISOString().split('T')[0];
+      const dayOfWeek = new Date().getDay();
       if (attendedDays.includes(today)) {
         alert("오늘 출석체크가 이미 완료되었습니다. 다음날 00:00시에 다시 체크하세요.");
         return;
@@ -229,7 +237,11 @@
 
       const input = prompt("직원 확인: 인증번호를 입력하세요");
       if (input === "036") {
-        attendedDays.push(today);
+        if (dayOfWeek === 6 || dayOfWeek === 0) {
+          attendedDays.push(today, today); // 출석 X2 처리
+        } else {
+          attendedDays.push(today);
+        }
         localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
         generateCalendar();
       } else {
