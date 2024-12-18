@@ -76,6 +76,15 @@
       font-weight: bold;
     }
 
+    .day.checked::after {
+      content: \"\\2705\"; /* 체크 도장 */
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 18px;
+      color: #4CAF50;
+    }
+
     .day-header {
       font-weight: bold;
       background-color: #e0e0e0;
@@ -179,6 +188,10 @@
         if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서 1,000원 즉시할인</div>`;
         if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 즉시할인</div>`;
         if (dayOfWeek === 6 || dayOfWeek === 0) day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
+
+        if (attendedDays.includes(day.dataset.date)) {
+          day.classList.add("checked");
+        }
 
         calendar.appendChild(day);
       }
