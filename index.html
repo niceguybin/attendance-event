@@ -192,7 +192,6 @@
     const startDate = new Date("2024-12-16");
     const endDate = new Date("2025-01-31");
     let attendedDays = localStorage.getItem("attendedDays") ? JSON.parse(localStorage.getItem("attendedDays")) : [];
-    let lastCheckDate = localStorage.getItem("lastCheckDate") || "";
 
     function generateCalendar() {
       calendar.innerHTML = `
@@ -215,6 +214,7 @@
           day.classList.add("checked");
           day.innerHTML += `<div>출석 완료</div>`;
         }
+
         calendar.appendChild(day);
       }
       attendedDaysDisplay.textContent = attendedDays.length;
@@ -222,8 +222,8 @@
 
     attendanceButton.addEventListener("click", () => {
       const today = new Date().toISOString().split('T')[0];
-      if (today === lastCheckDate) {
-        alert("오늘 출석체크는 이미 완료되었습니다. 다음날 00:00시 이후에 다시 체크하세요.");
+      if (attendedDays.includes(today)) {
+        alert("오늘 출석체크가 이미 완료되었습니다. 다음날 00:00시에 다시 체크하세요.");
         return;
       }
 
@@ -231,10 +231,7 @@
       if (input === "036") {
         attendedDays.push(today);
         localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
-        localStorage.setItem("lastCheckDate",
-        localStorage.setItem("lastCheckDate", today);
         generateCalendar();
-        alert("출석체크가 완료되었습니다!");
       } else {
         alert("인증번호가 틀렸습니다. 다시 시도해주세요.");
       }
