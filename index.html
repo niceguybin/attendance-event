@@ -23,12 +23,7 @@
       display: block;
       font-family: 'Arial Black', sans-serif;
       font-size: 32px;
-      text-shadow: 
-        1px 1px 0px #aaa, 
-        2px 2px 0px #999, 
-        3px 3px 0px #888, 
-        4px 4px 0px #777, 
-        5px 5px 0px #666;
+      text-shadow: 1px 1px 0px #aaa, 2px 2px 0px #999;
     }
 
     .goodbye2024 {
@@ -86,31 +81,10 @@
       margin-top: 3px;
     }
 
-    .day .double-attendance {
-      font-size: 10px;
-      color: red;
-      font-weight: bold;
-      margin-top: 3px;
-    }
-
     .day.checked {
       background-color: #c8f7c5;
       color: green;
       font-weight: bold;
-    }
-
-    .day-header {
-      font-weight: bold;
-      background-color: #e0e0e0;
-      padding: 5px;
-    }
-
-    .day-header:nth-child(6) {
-      color: blue;
-    }
-
-    .day-header:nth-child(7) {
-      color: red;
     }
 
     button {
@@ -153,12 +127,6 @@
       cursor: pointer;
       font-size: 12px;
     }
-
-    .coupon-list .used {
-      color: gray;
-      text-decoration: line-through;
-      pointer-events: none;
-    }
   </style>
 </head>
 <body>
@@ -168,7 +136,6 @@
       <span class="goodbye2024">GOODBYE 2024</span>
       <span class="welcome2025">WELCOME 2025</span>
     </h1>
-    <p style="color: red; font-weight: bold;">출석 이벤트 - 테스트 중입니다</p>
   </header>
 
   <div class="menu-bar">출석 완료: <span id="attendance-count">0</span></div>
@@ -187,12 +154,121 @@
 
   <div class="coupon-container">
     <h3>쿠폰함</h3>
-    <p>사용 전 직원에게 보여주세요</p>
     <ul id="coupon-list" class="coupon-list">받은 쿠폰이 없습니다.</ul>
   </div>
 
   <script>
-    // 여기에 기존의 JavaScript 코드가 포함됩니다.
+    const calendar = document.getElementById("calendar");
+    const attendanceButton = document.getElementById("attendance-btn");
+    const resetButton = document.getElementById("reset-btn");
+    const attendanceCountDisplay = document.getElementById("attendance-count");
+    const couponList = document.getElementById("coupon-list");
+
+    let attendedDays = JSON.parse(localStorage.getItem("attendedDays")) || [];
+    let attendanceCount = parseInt(localStorage.getItem("attendanceCount")) || 0;
+    let coupons = JSON.parse(localStorage.getItem("coupons")) || [];
+
+    const today = new Date().toISOString().split('T')[0];
+
+    function generateCalendar() {
+      calendar.innerHTML = "";
+      for (let i = 0; i < 7; i++) {
+      calendar
+       for (let date = new Date(); date <= new Date("2025-01-31"); date.setDate(date.getDate() + 1)) {
+          const day = document.createElement("div");
+          day.classList.add("day");
+          day.dataset.date = date.toISOString().split('T')[0];
+          const dayOfWeek = date.getDay();
+
+          day.innerHTML = `<div>${date.getDate()}</div>`;
+
+          if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+          if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
+          if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
+
+          if (attendedDays.includes(day.dataset.date)) {
+            day.classList.add("checked");
+          }
+
+          calendar.appendChild(day);
+        }
+    }
+
+    attendanceButton.addEventListener("click", () => {
+      const today = new Date().toISOString().split('T')[0];
+      const dayOfWeek = new Date().getDay();
+
+      if (attendedDays.includes(today)) {
+        alert("오늘 출석체크는 이미 완료되었습니다.");
+        return;
+      }
+
+      attendedDays.push(today);
+      attendanceCount += 1;
+
+      let coupon = null;
+      if (dayOfWeek === 3) {
+        coupon = { name: "도서 10% 할인 쿠폰", expiry: getExpiryDate() };
+        alert("🎉 도서 10% 할인 쿠폰을 받았습니다!");
+      } else if (dayOfWeek === 4) {
+        coupon = { name: "도서교환권 1,000원 쿠폰", expiry: getExpiryDate() };
+        alert("🎉 도서교환권 1,000원 쿠폰을 받았습니다!");
+      } else if (dayOfWeek === 5) {
+        coupon = { name: "문구 1,000원 할인쿠폰", expiry: getExpiryDate() };
+        alert("🎉 문구 1,000원 할인쿠폰을 받았습니다!");
+      }
+
+      if (coupon) {
+        coupons.push(coupon);
+      }
+
+      localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
+      localStorage.setItem("attendanceCount", attendanceCount);
+      localStorage.setItem("coupons", JSON.stringify(coupons));
+
+      attendanceCountDisplay.textContent = attendanceCount;
+      generateCalendar();
+      displayCoupons();
+    });
+
+    resetButton.addEventListener("click", () => {
+      if (confirm("모든 출석 기록과 쿠폰을 초기화하시겠습니까?")) {
+        localStorage.clear();
+        attendedDays = [];
+        attendanceCount = 0;
+        coupons = [];
+        attendanceCountDisplay.textContent = attendanceCount;
+        couponList.innerHTML = "받은 쿠폰이 없습니다.";
+        generateCalendar();
+      }
+    });
+
+    function displayCoupons() {
+      couponList.innerHTML = coupons.length
+        ? coupons.map((coupon, index) => `
+          <li>
+            ${coupon.name} (유효기간: ${coupon.expiry})
+            <button onclick="useCoupon(${index})">사용하기</button>
+          </li>
+        `).join('')
+        : "받은 쿠폰이 없습니다.";
+    }
+
+    function useCoupon(index) {
+      coupons.splice(index, 1);
+      localStorage.setItem("coupons", JSON.stringify(coupons));
+      displayCoupons();
+    }
+
+    function getExpiryDate() {
+      const expiry = new Date();
+      expiry.setDate(expiry.getDate() + 7);
+      return expiry.toISOString().split('T')[0];
+    }
+
+    attendanceCountDisplay.textContent = attendanceCount;
+    generateCalendar();
+    displayCoupons();
   </script>
 </body>
-</html>
+</html> 
