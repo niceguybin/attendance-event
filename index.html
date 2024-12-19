@@ -21,7 +21,7 @@
 
     h1 span {
       display: block;
-      font-size: 2.5em;
+      font-size: 1.875em; /* 25% 축소된 글자 크기 (기존 2.5em에서 25% 축소) */
       font-weight: bold;
       text-shadow: 1px 1px 0px #fff, 
                    2px 2px 0px #ddd, 
@@ -76,38 +76,10 @@
       position: relative;
     }
 
-    .day .benefit {
-      font-size: 10px;
-      color: green;
-      font-weight: bold;
-      margin-top: 3px;
-    }
-
-    .day .double-attendance {
-      font-size: 10px;
-      color: red;
-      font-weight: bold;
-      margin-top: 3px;
-    }
-
     .day.checked {
       background-color: #c8f7c5;
       color: green;
       font-weight: bold;
-    }
-
-    .day-header {
-      font-weight: bold;
-      background-color: #e0e0e0;
-      padding: 5px;
-    }
-
-    .day-header:nth-child(6) {
-      color: blue;
-    }
-
-    .day-header:nth-child(7) {
-      color: red;
     }
 
     button {
@@ -150,12 +122,6 @@
       cursor: pointer;
       font-size: 12px;
     }
-
-    .coupon-list .used {
-      color: gray;
-      text-decoration: line-through;
-      pointer-events: none;
-    }
   </style>
 </head>
 <body>
@@ -197,41 +163,46 @@
 
     let attendedDays = JSON.parse(localStorage.getItem("attendedDays")) || [];
     let attendanceCount = parseInt(localStorage.getItem("attendanceCount")) || 0;
-    let coupons = JSON.parse(localStorage.getItem("coupons")) || [];
-
-    const startDate = new Date("2024-12-16");
-    const endDate = new Date("2025-01-31");
-    const specialDays = ["2024-12-25", "2025-01-01"];
 
     function generateCalendar() {
-      calendar.innerHTML = `
-        <div class="day-header">월</div>
-        <div class="day-header">화</div>
-        <div class="day-header">수</div>
-        <div class="day-header">목</div>
-        <div class="day-header">금</div>
-        <div class="day-header" style="color: blue;">토</div>
-        <div class="day-header" style="color: red;">일</div>
-      `;
+      calendar.innerHTML = '';
+      const today = new Date();
+      const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
 
-      for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-        const day = document.createElement("div");
-        day.classList.add("day");
-        day.dataset.date = date.toISOString().split('T')[0];
-        const dayOfWeek = date.getDay();
+      for (let i = 1; i <= daysInMonth; i++) {
+        const dayElement = document.createElement("div");
+        dayElement.classList.add("day");
+        dayElement.textContent = i;
 
-        day.innerHTML = `<div>${date.getDate()}</div>`;
+        if (attendedDays.includes(i)) {
+          dayElement.classList.add("checked");
+        }
 
-        if (dayOfWeek === 3 && !specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
-        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
-        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
-        if (dayOfWeek === 6 || dayOfWeek === 0 || specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
-
-        if (attendedDays.includes(day.dataset.date)) day.classList.add("checked");
-
-        calendar.appendChild(day);
+        calendar.appendChild(dayElement);
       }
     }
+
+    attendanceButton.addEventListener("click", () => {
+      const today = new Date().getDate();
+      if (!attendedDays.includes(today)) {
+        attendedDays.push(today);
+        attendanceCount += 1;
+        localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
+        localStorage.setItem("attendanceCount", attendanceCount);
+        attendanceCountDisplay.textContent = attendanceCount;
+        generateCalendar();
+      } else {
+        alert("이미 오늘 출석체크를 완료했습니다!");
+      }
+    });
+
+    resetButton.addEventListener("click", () => {
+      attendedDays = [];
+      attendanceCount = 0;
+      localStorage.clear();
+      attendanceCountDisplay.textContent = attendanceCount;
+      generateCalendar();
+    });
 
     attendanceCountDisplay.textContent = attendanceCount;
     generateCalendar();
