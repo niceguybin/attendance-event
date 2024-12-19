@@ -16,12 +16,11 @@
     header {
       background-color: #4CAF50;
       color: white;
-      padding: 5px 0;
+      padding: 10px 0;
     }
 
     h1 span {
       display: block;
-      font-size: 18px;
     }
 
     .goodbye2024 {
@@ -165,7 +164,7 @@
       <span>교보문고 영등포점</span>
       <span class="goodbye2024">GOODBYE 2024</span>
       <span class="welcome2025">WELCOME 2025</span>
-      <span>출석 이벤트 - 테스트중입니다</span>
+      <span>출석 이벤트 - 테스트 중입니다</span>
     </h1>
   </header>
 
@@ -201,32 +200,31 @@
     let attendedDays = JSON.parse(localStorage.getItem("attendedDays")) || [];
     let attendanceCount = parseInt(localStorage.getItem("attendanceCount")) || 0;
     let coupons = JSON.parse(localStorage.getItem("coupons")) || [];
-    const specialDays = ["2024-12-25", "2025-01-01"];
 
     function generateCalendar() {
-      calendar.innerHTML = `
-        <div class="day-header">월</div>
-        <div class="day-header">화</div>
-        <div class="day-header">수</div>
-        <div class="day-header">목</div>
-        <div class="day-header">금</div>
-        <div class="day-header" style="color: blue;">토</div>
-        <div class="day-header" style="color: red;">일</div>
-      `;
+      calendar.innerHTML = ``;
+
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
-        day.dataset.date = date.toISOString().split("T")[0];
-        const dayOfWeek = date.getDay();
+        day.innerHTML = date.getDate();
+        calendar.appendChild(day);
+      }
+    }
 
-        day.innerHTML = `<div>${date.getDate()}</div>`;
+    attendanceButton.addEventListener("click", () => {
+      alert("출석 체크 완료!");
+      attendanceCount++;
+      attendanceCountDisplay.textContent = attendanceCount;
+    });
 
-        // 요일별 혜택 표시
-        if (dayOfWeek === 3 && !specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
-        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
-        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
-        if (dayOfWeek === 6 || dayOfWeek === 0 || specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
+    resetButton.addEventListener("click", () => {
+      alert("초기화 완료!");
+      attendanceCount = 0;
+      attendanceCountDisplay.textContent = attendanceCount;
+    });
 
-        if (attendedDays.includes(day.dataset.date)) day.classList.add("checked");
-
-       
+    generateCalendar();
+  </script>
+</body>
+</html>
