@@ -37,6 +37,20 @@
       font-weight: bold;
     }
 
+    .top-menu {
+      display: flex;
+      justify-content: space-around;
+      background-color: black;
+      padding: 10px 0;
+      margin-bottom: 10px;
+    }
+
+    .top-menu a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+
     main {
       margin: 20px auto;
       max-width: 400px;
@@ -60,6 +74,13 @@
     .day .benefit {
       font-size: 10px;
       color: green;
+      font-weight: bold;
+      margin-top: 3px;
+    }
+
+    .day .double-attendance {
+      font-size: 10px;
+      color: red;
       font-weight: bold;
       margin-top: 3px;
     }
@@ -124,6 +145,12 @@
 
   <div class="menu-bar">출석 완료: <span id="attendance-count">0</span></div>
 
+  <nav class="top-menu">
+    <a href="https://kiosk.kyobobook.co.kr/main?site=036" target="_blank">무인검색</a>
+    <a href="https://kyoboydp.modoo.at/?link=djbtcifp" target="_blank">매장안내도</a>
+    <a href="https://kyoboydp.modoo.at/?link=5e4qizls" target="_blank">영등포점 Q&A</a>
+  </nav>
+
   <main>
     <div id="calendar"></div>
     <button id="attendance-btn">출석체크</button>
@@ -146,6 +173,8 @@
     let attendanceCount = parseInt(localStorage.getItem("attendanceCount")) || 0;
     let coupons = JSON.parse(localStorage.getItem("coupons")) || [];
 
+    const specialDays = ["2024-12-25", "2025-01-01"];
+
     function generateCalendar() {
       calendar.innerHTML = `
         <div class="day-header">월</div>
@@ -165,9 +194,21 @@
 
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
-        if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
-        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
-        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
+        // 요일별 혜택
+        if (dayOfWeek === 3 && !specialDays.includes(day.dataset.date)) {
+          day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+        }
+        if (dayOfWeek === 4) {
+          day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
+        }
+        if (dayOfWeek === 5) {
+          day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
+        }
+
+        // 주말 및 특별 혜택 (출석 X2)
+        if (dayOfWeek === 6 || dayOfWeek === 0 || specialDays.includes(day.dataset.date)) {
+          day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
+        }
 
         if (attendedDays.includes(day.dataset.date)) {
           day.classList.add("checked");
@@ -175,13 +216,6 @@
 
         calendar.appendChild(day);
       }
-
-      displayCoupons();
-      attendanceCountDisplay.textContent = attendanceCount;
-    }
-
-    function displayCoupons() {
-      couponList.innerHTML = coupons.length > 0 ? coupons.map(coupon => `<li>${coupon}</li>`).join('') : "받은 쿠폰이 없습니다.";
     }
 
     attendanceButton.addEventListener("click", () => {
@@ -194,27 +228,22 @@
       }
 
       attendedDays.push(today);
-      attendanceCount++;
+
+      // 주말 및 특별일은 출석 2 증가
+      if (dayOfWeek === 6 || dayOfWeek === 0 || specialDays.includes(today)) {
+        attendanceCount += 2;
+      } else {
+        attendanceCount += 1;
+      }
+
       localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
       localStorage.setItem("attendanceCount", attendanceCount);
+      attendanceCountDisplay.textContent = attendanceCount;
 
-      if (dayOfWeek === 3) {
-        coupons.push("도서 10% 할인 쿠폰");
-        alert("🎉 도서 10% 할인 쿠폰을 받았습니다!");
-      }
-      if (dayOfWeek === 4) {
-        coupons.push("도서교환권 1,000원 쿠폰");
-        alert("🎉 도서교환권 1,000원 쿠폰을 받았습니다!");
-      }
-      if (dayOfWeek === 5) {
-        coupons.push("문구 1,000원 할인쿠폰");
-        alert("🎉 문구 1,000원 할인쿠폰을 받았습니다!");
-      }
-
-      localStorage.setItem("coupons", JSON.stringify(coupons));
       generateCalendar();
     });
 
+    attendanceCountDisplay.textContent = attendanceCount;
     generateCalendar();
   </script>
 </body>
