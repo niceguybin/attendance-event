@@ -16,22 +16,11 @@
     header {
       background-color: #4CAF50;
       color: white;
-      padding: 5px 0;
-    }
-
-    h1 {
-      font-size: 20px;
-      margin: 5px 0;
+      padding: 10px 0;
     }
 
     h1 span {
       display: block;
-    }
-
-    .test-notice {
-      color: red;
-      font-size: 12px;
-      font-weight: bold;
     }
 
     .goodbye2024 {
@@ -117,7 +106,7 @@
     }
 
     button {
-      margin: 10px 5px;
+      margin: 20px 5px;
       padding: 10px 20px;
       background-color: #4CAF50;
       color: white;
@@ -142,6 +131,32 @@
 
     .coupon-list li {
       margin: 5px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .coupon-list button {
+      background-color: #ff4b4b;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .coupon-list .used {
+      color: gray;
+      text-decoration: line-through;
+      pointer-events: none;
+    }
+
+    .coupon-list .expiry {
+      font-size: 12px;
+      color: #888;
+      margin-top: 5px;
+      display: block;
     }
   </style>
 </head>
@@ -151,8 +166,6 @@
       <span>교보문고 영등포점</span>
       <span class="goodbye2024">GOODBYE 2024</span>
       <span class="welcome2025">WELCOME 2025</span>
-      <span class="test-notice">테스트 중입니다</span>
-      <span>출석 이벤트</span>
     </h1>
   </header>
 
@@ -167,19 +180,17 @@
   <main>
     <div id="calendar"></div>
     <button id="attendance-btn">출석체크</button>
-    <button id="reset-btn">초기화</button>
   </main>
 
   <div class="coupon-container">
     <h3>쿠폰함</h3>
-    <p class="test-notice">사용 전 직원에게 보여주세요</p>
+    <p>사용 전 직원에게 보여주세요</p>
     <ul id="coupon-list" class="coupon-list">받은 쿠폰이 없습니다.</ul>
   </div>
 
   <script>
     const calendar = document.getElementById("calendar");
     const attendanceButton = document.getElementById("attendance-btn");
-    const resetButton = document.getElementById("reset-btn");
     const attendanceCountDisplay = document.getElementById("attendance-count");
     const couponList = document.getElementById("coupon-list");
 
@@ -198,7 +209,6 @@
         <div class="day-header" style="color: blue;">토</div>
         <div class="day-header" style="color: red;">일</div>
       `;
-
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
@@ -207,12 +217,8 @@
       }
     }
 
-    resetButton.addEventListener("click", () => {
-      localStorage.clear();
-      attendedDays = [];
-      attendanceCount = 0;
-      attendanceCountDisplay.textContent = attendanceCount;
-      generateCalendar();
+    attendanceButton.addEventListener("click", () => {
+      alert('출석체크 성공!');
     });
 
     generateCalendar();
