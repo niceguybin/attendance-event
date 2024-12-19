@@ -183,20 +183,10 @@
         <div class="day-header" style="color: red;">일</div>
       `;
 
-      const specialDays = ["2024-12-25", "2025-01-01"];
-
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
         day.dataset.date = date.toISOString().split('T')[0];
-        const dayOfWeek = date.getDay();
-
-        day.innerHTML = `<div>${date.getDate()}</div>`;
-
-        if (attendedDays.includes(day.dataset.date)) {
-          day.classList.add("checked");
-        }
-
         calendar.appendChild(day);
       }
     }
