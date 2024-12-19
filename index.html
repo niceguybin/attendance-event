@@ -24,11 +24,11 @@
     }
 
     .goodbye2024 {
-      color: #FFBE98; /* 2024 펜톤 컬러 */
+      color: #FFBE98;
     }
 
     .welcome2025 {
-      color: #5F4B8B; /* 2025 펜톤 컬러 */
+      color: #5F4B8B;
     }
 
     .top-menu {
@@ -41,6 +41,12 @@
     .top-menu a {
       text-decoration: none;
       color: white;
+      font-weight: bold;
+    }
+
+    .menu-bar {
+      background-color: #e0e0e0;
+      padding: 10px;
       font-weight: bold;
     }
 
@@ -67,6 +73,13 @@
     .day .benefit {
       font-size: 10px;
       color: green;
+      font-weight: bold;
+      margin-top: 3px;
+    }
+
+    .day .double-attendance {
+      font-size: 10px;
+      color: red;
       font-weight: bold;
       margin-top: 3px;
     }
@@ -101,26 +114,6 @@
       cursor: pointer;
       font-size: 14px;
     }
-
-    .coupon-container {
-      margin: 20px auto;
-      padding: 10px;
-      background-color: #fff;
-      border: 1px solid #ddd;
-    }
-
-    .coupon {
-      margin: 5px 0;
-      color: #4CAF50;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .coupon.used {
-      color: gray;
-      text-decoration: line-through;
-      pointer-events: none;
-    }
   </style>
 </head>
 <body>
@@ -138,25 +131,22 @@
     </h1>
   </header>
 
+  <div class="menu-bar">출석 완료: <span id="attendance-count">0</span></div>
+
   <main>
     <div id="calendar"></div>
     <button id="attendance-btn">출석체크</button>
   </main>
 
-  <div class="coupon-container">
-    <h3>쿠폰함</h3>
-    <div id="coupon-list">받은 쿠폰이 없습니다.</div>
-  </div>
-
   <script>
     const calendar = document.getElementById("calendar");
     const attendanceButton = document.getElementById("attendance-btn");
-    const couponList = document.getElementById("coupon-list");
+    const attendanceCountDisplay = document.getElementById("attendance-count");
 
     const startDate = new Date("2024-12-16");
     const endDate = new Date("2025-01-31");
     let attendedDays = JSON.parse(localStorage.getItem("attendedDays")) || [];
-    let coupons = JSON.parse(localStorage.getItem("coupons")) || [];
+    let attendanceCount = parseInt(localStorage.getItem("attendanceCount")) || 0;
 
     function generateCalendar() {
       calendar.innerHTML = `
@@ -169,23 +159,24 @@
         <div class="day-header" style="color: red;">일</div>
       `;
 
-      const firstDay = new Date(startDate);
-      const firstDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-
-      for (let i = 0; i < firstDayOfWeek; i++) {
-        calendar.appendChild(document.createElement("div")).classList.add("day");
-      }
+      const specialDays = ["2024-12-25", "2025-01-01"];
 
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
         day.dataset.date = date.toISOString().split('T')[0];
         const dayOfWeek = date.getDay();
+
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
-        if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+        // 요일별 혜택
+        if (dayOfWeek === 3 && !specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
         if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
         if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
+
+        if (dayOfWeek === 6 || dayOfWeek === 0 || specialDays.includes(day.dataset.date)) {
+          day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
+        }
 
         if (attendedDays.includes(day.dataset.date)) {
           day.classList.add("checked");
@@ -195,6 +186,31 @@
       }
     }
 
+    attendanceButton.addEventListener("click", () => {
+      const today = new Date().toISOString().split('T')[0];
+      const dayOfWeek = new Date().getDay();
+
+      if (attendedDays.includes(today)) {
+        alert("오늘 출석체크는 이미 완료되었습니다.");
+        return;
+      }
+
+      attendedDays.push(today);
+      localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
+
+      if (dayOfWeek === 6 || dayOfWeek === 0 || today === "2024-12-25" || today === "2025-01-01") {
+        attendanceCount += 2;
+      } else {
+        attendanceCount += 1;
+      }
+
+      localStorage.setItem("attendanceCount", attendanceCount);
+      attendanceCountDisplay.textContent = attendanceCount;
+
+      generateCalendar();
+    });
+
+    attendanceCountDisplay.textContent = attendanceCount;
     generateCalendar();
   </script>
 </body>
