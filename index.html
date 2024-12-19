@@ -164,8 +164,8 @@
       <span>교보문고 영등포점</span>
       <span class="goodbye2024">GOODBYE 2024</span>
       <span class="welcome2025">WELCOME 2025</span>
-      <span>출석 이벤트 - 테스트 중입니다</span>
     </h1>
+    <p style="color: red; font-weight: bold;">출석 이벤트 - 테스트 중입니다</p>
   </header>
 
   <div class="menu-bar">출석 완료: <span id="attendance-count">0</span></div>
@@ -200,30 +200,39 @@
     let attendedDays = JSON.parse(localStorage.getItem("attendedDays")) || [];
     let attendanceCount = parseInt(localStorage.getItem("attendanceCount")) || 0;
     let coupons = JSON.parse(localStorage.getItem("coupons")) || [];
+    const specialDays = ["2024-12-25", "2025-01-01"];
 
     function generateCalendar() {
-      calendar.innerHTML = ``;
-
+      calendar.innerHTML = `
+        <div class="day-header">월</div>
+        <div class="day-header">화</div>
+        <div class="day-header">수</div>
+        <div class="day-header">목</div>
+        <div class="day-header">금</div>
+        <div class="day-header" style="color: blue;">토</div>
+        <div class="day-header" style="color: red;">일</div>
+      `;
+      
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
-        day.innerHTML = date.getDate();
+        day.dataset.date = date.toISOString().split('T')[0];
+        const dayOfWeek = date.getDay();
+        
+        day.innerHTML = `<div>${date.getDate()}</div>`;
+
+        if (dayOfWeek === 3 && !specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
+        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
+        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
+        if (dayOfWeek === 6 || dayOfWeek === 0 || specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
+
+        if (attendedDays.includes(day.dataset.date)) day.classList.add("checked");
+
         calendar.appendChild(day);
       }
     }
 
-    attendanceButton.addEventListener("click", () => {
-      alert("출석 체크 완료!");
-      attendanceCount++;
-      attendanceCountDisplay.textContent = attendanceCount;
-    });
-
-    resetButton.addEventListener("click", () => {
-      alert("초기화 완료!");
-      attendanceCount = 0;
-      attendanceCountDisplay.textContent = attendanceCount;
-    });
-
+    attendanceCountDisplay.textContent = attendanceCount;
     generateCalendar();
   </script>
 </body>
