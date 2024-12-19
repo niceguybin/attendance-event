@@ -23,6 +23,14 @@
       display: block;
     }
 
+    .goodbye2024 {
+      color: #FFBE98; /* 2024 펜톤 컬러 */
+    }
+
+    .welcome2025 {
+      color: #00B2CA; /* 2025 펜톤 컬러 */
+    }
+
     .top-menu {
       display: flex;
       justify-content: space-around;
@@ -77,11 +85,11 @@
     }
 
     .day.checked::after {
-      content: \"\\2705\"; /* 체크 도장 */
+      content: "출석 완료";
       position: absolute;
-      top: 5px;
+      bottom: 5px;
       right: 5px;
-      font-size: 18px;
+      font-size: 10px;
       color: #4CAF50;
     }
 
@@ -121,6 +129,24 @@
       margin: 5px 0;
       color: #4CAF50;
       font-weight: bold;
+      cursor: pointer;
+    }
+
+    .coupon button {
+      margin-top: 5px;
+      padding: 5px 10px;
+      background-color: #FF6347;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .coupon p {
+      font-size: 12px;
+      color: #555;
+      margin: 5px 0 0;
     }
   </style>
 </head>
@@ -134,8 +160,8 @@
   <header>
     <h1>
       <span>교보문고 영등포점</span>
-      <span>GOODBYE 2024</span>
-      <span>WELCOME 2025</span>
+      <span class="goodbye2024">GOODBYE 2024</span>
+      <span class="welcome2025">WELCOME 2025</span>
     </h1>
   </header>
 
@@ -184,46 +210,11 @@
         const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
-        if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
-        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서 1,000원 즉시할인</div>`;
-        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 즉시할인</div>`;
-        if (dayOfWeek === 6 || dayOfWeek === 0) day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
-
-        if (attendedDays.includes(day.dataset.date)) {
-          day.classList.add("checked");
-        }
-
         calendar.appendChild(day);
       }
     }
 
-    function displayCoupons() {
-      couponList.innerHTML = coupons.length ? coupons.map(c => `<div class='coupon'>${c}</div>`).join('') : "받은 쿠폰이 없습니다.";
-    }
-
-    attendanceButton.addEventListener("click", () => {
-      const today = new Date().toISOString().split('T')[0];
-      const dayOfWeek = new Date().getDay();
-      if (attendedDays.includes(today)) {
-        alert("오늘 출석체크는 이미 완료되었습니다.");
-        return;
-      }
-
-      attendedDays.push(today);
-      localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
-
-      if (dayOfWeek === 3) coupons.push(`도서 10% 할인 쿠폰 (${today})`);
-      if (dayOfWeek === 4) coupons.push(`도서 1,000원 즉시할인 쿠폰 (${today})`);
-      if (dayOfWeek === 5) coupons.push(`문구 1,000원 즉시할인 쿠폰 (${today})`);
-
-      localStorage.setItem("coupons", JSON.stringify(coupons));
-      alert("🎉 쿠폰을 받았습니다!");
-      generateCalendar();
-      displayCoupons();
-    });
-
     generateCalendar();
-    displayCoupons();
   </script>
 </body>
 </html>
