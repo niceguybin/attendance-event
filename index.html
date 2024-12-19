@@ -71,13 +71,6 @@
       margin-top: 3px;
     }
 
-    .day .double-attendance {
-      font-size: 10px;
-      color: red;
-      font-weight: bold;
-      margin-top: 3px;
-    }
-
     .day.checked {
       background-color: #c8f7c5;
       color: green;
@@ -187,8 +180,6 @@
     const calendar = document.getElementById("calendar");
     const attendanceButton = document.getElementById("attendance-btn");
     const couponList = document.getElementById("coupon-list");
-    const startDate = new Date("2024-12-16");
-    const endDate = new Date("2025-01-31");
     let attendedDays = JSON.parse(localStorage.getItem("attendedDays")) || [];
     let coupons = JSON.parse(localStorage.getItem("coupons")) || [];
 
@@ -202,16 +193,6 @@
         <div class="day-header" style="color: blue;">토</div>
         <div class="day-header" style="color: red;">일</div>
       `;
-
-      for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-        const day = document.createElement("div");
-        day.classList.add("day");
-        day.dataset.date = date.toISOString().split('T')[0];
-        const dayOfWeek = date.getDay();
-        day.innerHTML = `<div>${date.getDate()}</div>`;
-
-        calendar.appendChild(day);
-      }
     }
 
     generateCalendar();
