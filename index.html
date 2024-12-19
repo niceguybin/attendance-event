@@ -212,7 +212,6 @@
         <div class="day-header" style="color: blue;">토</div>
         <div class="day-header" style="color: red;">일</div>
       `;
-      for (let date = new Date(startDate); date <= end
         for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
