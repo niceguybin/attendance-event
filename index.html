@@ -114,6 +114,23 @@
       cursor: pointer;
       font-size: 14px;
     }
+
+    .coupon-container {
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-top: 20px;
+    }
+
+    .coupon-list {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #4CAF50;
+    }
+
+    .coupon-list li {
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
@@ -138,15 +155,22 @@
     <button id="attendance-btn">출석체크</button>
   </main>
 
+  <div class="coupon-container">
+    <h3>쿠폰함</h3>
+    <ul id="coupon-list" class="coupon-list">받은 쿠폰이 없습니다.</ul>
+  </div>
+
   <script>
     const calendar = document.getElementById("calendar");
     const attendanceButton = document.getElementById("attendance-btn");
     const attendanceCountDisplay = document.getElementById("attendance-count");
+    const couponList = document.getElementById("coupon-list");
 
     const startDate = new Date("2024-12-16");
     const endDate = new Date("2025-01-31");
     let attendedDays = JSON.parse(localStorage.getItem("attendedDays")) || [];
     let attendanceCount = parseInt(localStorage.getItem("attendanceCount")) || 0;
+    let coupons = JSON.parse(localStorage.getItem("coupons")) || [];
 
     function generateCalendar() {
       calendar.innerHTML = `
@@ -169,15 +193,6 @@
 
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
-        // 요일별 혜택
-        if (dayOfWeek === 3 && !specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
-        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
-        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
-
-        if (dayOfWeek === 6 || dayOfWeek === 0 || specialDays.includes(day.dataset.date)) {
-          day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
-        }
-
         if (attendedDays.includes(day.dataset.date)) {
           day.classList.add("checked");
         }
@@ -186,31 +201,6 @@
       }
     }
 
-    attendanceButton.addEventListener("click", () => {
-      const today = new Date().toISOString().split('T')[0];
-      const dayOfWeek = new Date().getDay();
-
-      if (attendedDays.includes(today)) {
-        alert("오늘 출석체크는 이미 완료되었습니다.");
-        return;
-      }
-
-      attendedDays.push(today);
-      localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
-
-      if (dayOfWeek === 6 || dayOfWeek === 0 || today === "2024-12-25" || today === "2025-01-01") {
-        attendanceCount += 2;
-      } else {
-        attendanceCount += 1;
-      }
-
-      localStorage.setItem("attendanceCount", attendanceCount);
-      attendanceCountDisplay.textContent = attendanceCount;
-
-      generateCalendar();
-    });
-
-    attendanceCountDisplay.textContent = attendanceCount;
     generateCalendar();
   </script>
 </body>
