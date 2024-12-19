@@ -212,7 +212,6 @@
         <div class="day-header" style="color: blue;">토</div>
         <div class="day-header" style="color: red;">일</div>
       `;
-      
       for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
         const day = document.createElement("div");
         day.classList.add("day");
@@ -220,19 +219,14 @@
         const dayOfWeek = date.getDay();
         
         day.innerHTML = `<div>${date.getDate()}</div>`;
-
-        if (dayOfWeek === 3 && !specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
-        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
-        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
-        if (dayOfWeek === 6 || dayOfWeek === 0 || specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
-
-        if (attendedDays.includes(day.dataset.date)) day.classList.add("checked");
-
         calendar.appendChild(day);
       }
     }
 
-    attendanceCountDisplay.textContent = attendanceCount;
+    attendanceButton.addEventListener("click", () => {
+      alert("출석체크 완료!");
+    });
+
     generateCalendar();
   </script>
 </body>
