@@ -218,7 +218,7 @@
         day.classList.add("day");
         day.dataset.date = date.toISOString().split('T')[0];
         const dayOfWeek = date.getDay();
-        
+
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
         if (dayOfWeek === 3 && !specialDays.includes(day.dataset.date)) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
@@ -232,6 +232,34 @@
       }
     }
 
+    attendanceButton.addEventListener("click", () => {
+      const today = new Date().toISOString().split('T')[0];
+
+      if (attendedDays.includes(today)) {
+        alert("오늘 출석체크는 이미 완료되었습니다.");
+        return;
+      }
+
+      attendedDays.push(today);
+      attendanceCount += 1;
+      attendanceCountDisplay.textContent = attendanceCount;
+
+      localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
+      localStorage.setItem("attendanceCount", attendanceCount);
+      generateCalendar();
+    });
+
+    resetButton.addEventListener("click", () => {
+      if (confirm("모든 출석 기록과 쿠폰을 초기화하시겠습니까?")) {
+        localStorage.clear();
+        attendedDays = [];
+        attendanceCount = 0;
+        attendanceCountDisplay.textContent = attendanceCount;
+        generateCalendar();
+      }
+    });
+
+    attendanceCountDisplay.textContent = attendanceCount;
     generateCalendar();
   </script>
 </body>
