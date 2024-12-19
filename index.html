@@ -230,17 +230,38 @@
 
     attendanceButton.addEventListener("click", () => {
       const today = new Date().toISOString().split('T')[0];
+      const dayOfWeek = new Date().getDay();
+
       if (attendedDays.includes(today)) {
         alert("오늘 출석체크는 이미 완료되었습니다.");
         return;
       }
+
       attendedDays.push(today);
       attendanceCount += 1;
 
+      let coupon = null;
+      if (dayOfWeek === 3) {
+        coupon = { name: "도서 10% 할인 쿠폰", expiry: getExpiryDate() };
+        alert("🎉 도서 10% 할인 쿠폰을 받았습니다!");
+      } else if (dayOfWeek === 4) {
+        coupon = { name: "도서교환권 1,000원 쿠폰", expiry: getExpiryDate() };
+        alert("🎉 도서교환권 1,000원 쿠폰을 받았습니다!");
+      } else if (dayOfWeek === 5) {
+        coupon = { name: "문구 1,000원 할인쿠폰", expiry: getExpiryDate() };
+        alert("🎉 문구 1,000원 할인쿠폰을 받았습니다!");
+      }
+
+      if (coupon) coupons.push(coupon);
+
       localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
+      localStorage
       localStorage.setItem("attendanceCount", attendanceCount);
+      localStorage.setItem("coupons", JSON.stringify(coupons));
+
       attendanceCountDisplay.textContent = attendanceCount;
       generateCalendar();
+      displayCoupons();
     });
 
     resetButton.addEventListener("click", () => {
@@ -255,8 +276,45 @@
       }
     });
 
+    function displayCoupons() {
+      const today = new Date().toISOString().split('T')[0];
+      coupons = coupons.filter(coupon => coupon.expiry >= today && !coupon.used);
+
+      localStorage.setItem("coupons", JSON.stringify(coupons));
+
+      couponList.innerHTML = coupons.length
+        ? coupons
+            .map(
+              (coupon, index) => `
+                <li class="${coupon.used ? 'used' : ''}">
+                  ${coupon.name}
+                  <span class="expiry">유효기간: ${coupon.expiry}</span>
+                  ${
+                    !coupon.used
+                      ? `<button onclick="useCoupon(${index})">사용하기</button>`
+                      : '사용완료'
+                  }
+                </li>`
+            )
+            .join('')
+        : "받은 쿠폰이 없습니다.";
+    }
+
+    function useCoupon(index) {
+      coupons[index].used = true;
+      localStorage.setItem("coupons", JSON.stringify(coupons));
+      displayCoupons();
+    }
+
+    function getExpiryDate() {
+      const expiry = new Date();
+      expiry.setDate(expiry.getDate() + 7);
+      return expiry.toISOString().split('T')[0];
+    }
+
     attendanceCountDisplay.textContent = attendanceCount;
     generateCalendar();
+    displayCoupons();
   </script>
 </body>
 </html>
