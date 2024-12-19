@@ -21,11 +21,9 @@
 
     h1 span {
       display: block;
-      font-size: 1.875em; /* 25% 축소된 글자 크기 (기존 2.5em에서 25% 축소) */
+      font-size: 2em;
       font-weight: bold;
-      text-shadow: 1px 1px 0px #fff, 
-                   2px 2px 0px #ddd, 
-                   3px 3px 2px rgba(0, 0, 0, 0.5);
+      text-shadow: 1px 1px 0px #fff, 2px 2px 0px #ddd, 3px 3px 2px rgba(0, 0, 0, 0.5);
     }
 
     .goodbye2024 {
@@ -76,10 +74,31 @@
       position: relative;
     }
 
+    .day .benefit {
+      font-size: 10px;
+      color: green;
+      font-weight: bold;
+      margin-top: 3px;
+    }
+
     .day.checked {
       background-color: #c8f7c5;
       color: green;
       font-weight: bold;
+    }
+
+    .day-header {
+      font-weight: bold;
+      background-color: #e0e0e0;
+      padding: 5px;
+    }
+
+    .day-header:nth-child(6) {
+      color: blue;
+    }
+
+    .day-header:nth-child(7) {
+      color: red;
     }
 
     button {
@@ -159,13 +178,21 @@
     const attendanceButton = document.getElementById("attendance-btn");
     const resetButton = document.getElementById("reset-btn");
     const attendanceCountDisplay = document.getElementById("attendance-count");
-    const couponList = document.getElementById("coupon-list");
 
     let attendedDays = JSON.parse(localStorage.getItem("attendedDays")) || [];
     let attendanceCount = parseInt(localStorage.getItem("attendanceCount")) || 0;
 
     function generateCalendar() {
-      calendar.innerHTML = '';
+      calendar.innerHTML = `
+        <div class="day-header">월</div>
+        <div class="day-header">화</div>
+        <div class="day-header">수</div>
+        <div class="day-header">목</div>
+        <div class="day-header">금</div>
+        <div class="day-header">토</div>
+        <div class="day-header">일</div>
+      `;
+
       const today = new Date();
       const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
 
@@ -186,7 +213,7 @@
       const today = new Date().getDate();
       if (!attendedDays.includes(today)) {
         attendedDays.push(today);
-        attendanceCount += 1;
+        attendanceCount++;
         localStorage.setItem("attendedDays", JSON.stringify(attendedDays));
         localStorage.setItem("attendanceCount", attendanceCount);
         attendanceCountDisplay.textContent = attendanceCount;
