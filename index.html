@@ -85,7 +85,7 @@
     }
 
     .day.checked::after {
-      content: "\2705 출석 완료";
+      content: "\\2705 출석 완료";
       position: absolute;
       top: 5px;
       right: 5px;
@@ -125,6 +125,26 @@
       margin-top: 20px;
       border: 1px solid #ddd;
     }
+
+    .coupon-container {
+      margin: 20px auto;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+    }
+
+    .coupon {
+      margin: 5px 0;
+      color: #4CAF50;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .coupon.used {
+      color: gray;
+      text-decoration: line-through;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -155,25 +175,20 @@
     <button id="attendance-btn">출석체크</button>
   </main>
 
-  <div class="notice">
-    <h3>주의사항</h3>
-    <ul>
-      <li>요일별 혜택은 당일 사용 가능합니다.</li>
-      <li>일부 도서 및 문구류 사용 불가합니다.</li>
-      <li>바로드림 및 중복 혜택은 불가합니다.</li>
-      <li>5회 출석 시 사은품 A 증정</li>
-      <li>7회 출석 시 사은품 B 증정</li>
-      <li>10회 출석 시 사은품 C 증정</li>
-    </ul>
+  <div class="coupon-container">
+    <h3>쿠폰함</h3>
+    <div id="coupon-list">받은 쿠폰이 없습니다.</div>
   </div>
 
   <script>
     const calendar = document.getElementById("calendar");
     const attendanceButton = document.getElementById("attendance-btn");
+    const couponList = document.getElementById("coupon-list");
 
     const startDate = new Date("2024-12-16");
     const endDate = new Date("2025-01-31");
     let attendedDays = JSON.parse(localStorage.getItem("attendedDays")) || [];
+    let coupons = JSON.parse(localStorage.getItem("coupons")) || [];
 
     function generateCalendar() {
       calendar.innerHTML = `
@@ -193,13 +208,8 @@
         const dayOfWeek = date.getDay();
         day.innerHTML = `<div>${date.getDate()}</div>`;
 
-        // 요일별 혜택 추가
-        if (dayOfWeek === 3) day.innerHTML += `<div class='benefit'>도서 10% 할인</div>`;
-        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서 1,000원 즉시할인</div>`;
-        if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 즉시할인</div>`;
-        if (dayOfWeek === 6 || dayOfWeek === 0) day.innerHTML += `<div class='double-attendance'>출석 X2</div>`;
+        if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
 
-        // 출석 체크된 날짜에 표시
         if (attendedDays.includes(day.dataset.date)) {
           day.classList.add("checked");
         }
