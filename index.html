@@ -3,81 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나의 마지막 2024년 끝</title>
+    <title>스프링 노트 쿠폰</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(to right, #f0f8ff, #e6e6fa);
-            text-align: center;
-            color: #333;
-        }
-
-        .coupon-container {
-            padding: 20px;
-        }
-
-        .coupon-container h1 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #4a4a8a;
-        }
-
-        .week-coupons {
+            background: #fdfdfd;
             display: flex;
             justify-content: center;
-            gap: 15px;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .notebook {
+            width: 800px;
+            background: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notebook::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(to right, #333 20%, transparent 20%);
+            background-size: 30px 30px;
+            z-index: 2;
+        }
+
+        .notebook h1 {
+            text-align: center;
+            padding: 15px 0;
+            background: #f7f7f7;
+            margin: 0;
+            font-size: 24px;
+            color: #4a4a8a;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .page {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
             flex-wrap: wrap;
+            gap: 20px;
         }
 
         .coupon {
             width: 100px;
             height: 100px;
             border-radius: 50%;
+            background: linear-gradient(to bottom, #8a2be2, #4b0082);
+            color: #fff;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             font-size: 14px;
             font-weight: bold;
-            color: #fff;
-            background-color: #8a2be2;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            position: relative;
+            cursor: pointer;
             transition: transform 0.3s ease;
         }
 
         .coupon:hover {
             transform: scale(1.1);
-            background-color: #4b0082;
         }
 
         .coupon::after {
             content: attr(data-day);
-            display: block;
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 12px;
-            margin-top: 5px;
-            color: #ffebcd;
+            color: #555;
         }
     </style>
 </head>
 <body>
-    <div class="coupon-container">
+    <div class="notebook">
         <h1>나의 마지막 2024년 끝</h1>
-        <div class="week-coupons">
-            <div class="coupon" data-day="12/26">Thursday</div>
-            <div class="coupon" data-day="12/27">Friday</div>
-            <div class="coupon" data-day="12/28">Saturday</div>
-            <div class="coupon" data-day="12/29">Sunday</div>
-            <div class="coupon" data-day="12/30">Monday</div>
-            <div class="coupon" data-day="12/31">Tuesday</div>
+        <div class="page">
+            <div class="coupon" data-day="12/26">Thu</div>
+            <div class="coupon" data-day="12/27">Fri</div>
+            <div class="coupon" data-day="12/28">Sat</div>
+            <div class="coupon" data-day="12/29">Sun</div>
+            <div class="coupon" data-day="12/30">Mon</div>
+            <div class="coupon" data-day="12/31">Tue</div>
         </div>
     </div>
-    <script>
-        document.querySelectorAll('.coupon').forEach(coupon => {
-            coupon.addEventListener('click', () => {
-                alert(`You clicked on ${coupon.getAttribute('data-day')}!`);
-            });
-        });
-    </script>
 </body>
 </html>
