@@ -87,6 +87,8 @@
       grid-template-columns: repeat(7, 1fr);
       gap: 5px;
       font-size: 14px;
+      transform: rotateX(15deg);
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
     }
 
     .day {
@@ -253,7 +255,7 @@
         if (dayOfWeek === 4) day.innerHTML += `<div class='benefit'>도서교환권 1,000원 증정</div>`;
         if (dayOfWeek === 5) day.innerHTML += `<div class='benefit'>문구 1,000원 할인쿠폰</div>`;
         if (dayOfWeek === 6 || dayOfWeek === 0 || specialDays.includes(day.dataset.date)) day.innerHTML +=
-  `<div class='double-attendance'>출석 X2</div>`;
+          `<div class='double-attendance'>출석 X2</div>`;
 
         if (attendedDays.includes(day.dataset.date)) day.classList.add("checked");
 
@@ -267,7 +269,12 @@
 
       if (!attendedDays.includes(today)) {
         attendedDays.push(today);
-        attendanceCount += 1;
+
+        if (dayOfWeek === 0 || dayOfWeek === 6 || specialDays.includes(today)) {
+          attendanceCount += 2; // 주말 및 특별일에는 출석 점수 2 증가
+        } else {
+          attendanceCount += 1;
+        }
 
         let coupon = null;
         if (dayOfWeek === 3) {
