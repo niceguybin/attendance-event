@@ -14,7 +14,7 @@
             text-align: center;
         }
         .header {
-            padding: 100px 20px; /* Adjusted padding to move the header down */
+            padding: 80px 20px; /* Adjusted padding to reduce gap */
         }
         .header h1 {
             font-size: 2.5em;
@@ -42,7 +42,7 @@
             padding: 20px;
         }
         .content h2 {
-            font-size: 0.25em; /* Reduced to 1/7 of its current size */
+            font-size: 0.275em; /* Increased size by 10% */
             margin-bottom: 20px;
         }
         .content h2 span.highlight {
@@ -144,16 +144,35 @@
             color: #ccc;
             margin-top: 5px;
         }
+        .attendance-rewards {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #fff;
+            text-align: left;
+            padding: 0 20px;
+        }
     </style>
     <script>
         let giftCount = 0;
         let giftDetails = [];
+        let attendanceCount = 0;
 
         function claimReward(day, detail) {
             giftCount++;
+            attendanceCount++;
             giftDetails.push({ day, detail, used: false, usedTime: null });
             document.getElementById('gift-count').textContent = giftCount;
+            updateAttendanceRewards();
             alert(`${day}: 혜택을 받았습니다!`);
+        }
+
+        function updateAttendanceRewards() {
+            const rewardsContainer = document.getElementById('attendance-rewards');
+            rewardsContainer.innerHTML = `
+                <p>1. 3일간 출석 시 사은품A 증정</p>
+                <p>2. 5일간 출석 시 사은품B 증정</p>
+                <p>현재 출석일: ${attendanceCount}일</p>
+            `;
         }
 
         function toggleGiftBox() {
@@ -242,6 +261,10 @@
                 <p>Grand Finale</p>
                 <button onclick="claimReward('1월 3일', 'Grand Finale')">혜택받기</button>
             </div>
+        </div>
+
+        <div id="attendance-rewards" class="attendance-rewards">
+            <!-- Attendance rewards will be updated dynamically -->
         </div>
     </div>
 
