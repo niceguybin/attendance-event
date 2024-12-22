@@ -240,14 +240,52 @@
             giftDetails = [];
             localStorage.clear();
             document.getElementById('gift-count').textContent = giftCount;
+
+            const buttons = document.querySelectorAll('.day-card button');
+            buttons.forEach(button => {
+                button.textContent = '혜택받기';
+                button.classList.remove('received');
+                button.disabled = false;
+            });
+
             updateAttendanceRewards();
-            updateButtonStates();
             alert('데이터가 초기화되었습니다.');
+        }
+
+        function toggleGiftBox() {
+            const giftBox = document.querySelector('.gift-box');
+            giftBox.classList.toggle('expanded');
+
+            if (giftBox.classList.contains('expanded')) {
+                let giftContent = '<h3>받은 혜택</h3><ul>';
+                giftDetails.forEach((gift, index) => {
+                    giftContent += `<li>${gift.day} - ${gift.detail} ${
+                        gift.used
+                            ? `<span class="used-time">(사용완료: ${gift.usedTime})</span>`
+                            : `<button onclick="useGift(${index})">사용하기</button>`
+                    }</li>`;
+                });
+                giftContent += '</ul><p class="instruction">(사용 전 직원에게 화면을 보여주세요)</p><button class="close-btn" onclick="toggleGiftBox()">닫기</button>';
+                giftBox.innerHTML = giftContent;
+            } else {
+                giftBox.innerHTML = `🎁 선물함 <span id="gift-count">${giftCount}</span>`;
+            }
+        }
+
+        function useGift(index) {
+            const now = new Date();
+            const time = `${now.getHours()}시 ${now.getMinutes()}분`;
+            giftDetails[index].used = true;
+            giftDetails[index].usedTime = time;
+
+            saveData(); // Save updated data
+            alert('쿠폰을 사용했습니다!');
+            toggleGiftBox();
+            toggleGiftBox(); // Refresh the gift box content
         }
     </script>
 </head>
 <body>
-
     <div class="header">
         <h1>
             <span class="goodbye">GOODBYE <span class="year">2024</span></span><br>
@@ -305,11 +343,9 @@
                 <p>Grand Finale</p>
                 <button onclick="claimReward('1월 3일', 'Grand Finale')">혜택받기</button>
             </div>
-                </div>
-
-        <div id="attendance-rewards" class="attendance-rewards">
-            <!-- Attendance rewards will be updated dynamically -->
         </div>
+
+        <div id="attendance-rewards" class="attendance-rewards"></div>
 
         <button class="reset-button" onclick="resetData()">초기화</button>
     </div>
@@ -317,6 +353,5 @@
     <div class="gift-box" onclick="toggleGiftBox()">
         🎁 선물함 <span id="gift-count">0</span>
     </div>
-
 </body>
 </html>
