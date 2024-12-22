@@ -45,6 +45,9 @@
             font-size: 1.8em;
             margin-bottom: 20px;
         }
+        .content h2 span.highlight {
+            color: #ffd700;
+        }
         .event-days {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -57,11 +60,12 @@
             border-radius: 10px;
             padding: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            color: #fff;
+            color: #000;
+            font-size: 14px;
         }
         .day-card h3 {
             margin: 10px 0;
-            font-size: 16px;
+            font-size: 14px;
         }
         .day-card p {
             font-size: 12px;
@@ -128,6 +132,11 @@
         .gift-box ul li {
             margin: 10px 0;
         }
+        .gift-box .instruction {
+            font-size: 12px;
+            color: #ddd;
+            margin-top: -10px;
+        }
         .close-btn {
             margin-top: 20px;
             padding: 10px;
@@ -140,6 +149,11 @@
         }
         .close-btn:hover {
             background: #c0392b;
+        }
+        .used-time {
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 5px;
         }
     </style>
     <script>
@@ -163,7 +177,7 @@
 
         function claimReward(day, detail) {
             giftCount++;
-            giftDetails.push({ day, detail, used: false });
+            giftDetails.push({ day, detail, used: false, usedTime: null });
             document.getElementById('gift-count').textContent = giftCount;
             alert(`${day}: 혜택을 받았습니다!`);
         }
@@ -175,9 +189,9 @@
             if (giftBox.classList.contains('expanded')) {
                 let giftContent = '<h3>받은 혜택</h3><ul>';
                 giftDetails.forEach((gift, index) => {
-                    giftContent += `<li>${gift.day} - ${gift.detail} ${gift.used ? '(사용완료)' : '<button onclick='useGift(' + index + ')'>사용하기</button>'}</li>`;
+                    giftContent += `<li>${gift.day} - ${gift.detail} ${gift.used ? '<span class="used-time">(사용완료: ' + gift.usedTime + ')</span>' : '<button onclick="useGift(' + index + ')">사용하기</button>'}</li>`;
                 });
-                giftContent += '</ul><button class="close-btn" onclick="toggleGiftBox()">닫기</button>';
+                giftContent += '</ul><p class="instruction">(사용 전 직원에게 화면을 보여주세요)</p><button class="close-btn" onclick="toggleGiftBox()">닫기</button>';
                 giftBox.innerHTML = giftContent;
             } else {
                 giftBox.innerHTML = `🎁 선물함 <span id="gift-count">${giftCount}</span>`;
@@ -185,7 +199,10 @@
         }
 
         function useGift(index) {
+            const now = new Date();
+            const time = `${now.getHours()}시 ${now.getMinutes()}분`;
             giftDetails[index].used = true;
+            giftDetails[index].usedTime = time;
             alert('쿠폰을 사용했습니다!');
             toggleGiftBox();
             toggleGiftBox(); // Refresh the gift box content
@@ -205,7 +222,7 @@
     </div>
 
     <div class="content">
-        <h2>9일간의 혜택 매일 매일 새로운 혜택을 받으세요</h2>
+        <h2><span class="highlight">9일간</span>의 혜택<br><span class="highlight">매일 새로운 혜택</span>을 받으세요</h2>
 
         <div class="event-days">
             <div class="day-card">
@@ -244,6 +261,7 @@
                 <button onclick="claimReward('1월 1일', 'New Year Celebrations')">혜택받기</button>
             </div>
             <div class="day-card">
+                        <div class="day-card">
                 <h3>1월 2일</h3>
                 <p>Customer Appreciation Day</p>
                 <button onclick="claimReward('1월 2일', 'Customer Appreciation Day')">혜택받기</button>
