@@ -22,12 +22,12 @@
             line-height: 1.2;
         }
         .header h1 .goodbye {
-            background: linear-gradient(to right, #ffffff, #ffffff);
+            background: linear-gradient(to right, #4facfe, #00f2fe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .header h1 .welcome {
-            background: linear-gradient(to right,#4facfe, #00f2fe);
+            background: linear-gradient(to right, #ffb199, #ff0844);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -175,6 +175,7 @@
         let giftCount = 0;
         let giftDetails = [];
         let attendanceCount = 0;
+        let rewardsGiven = { a: false, b: false };
 
         // Load data from localStorage on page load
         window.onload = function() {
@@ -209,7 +210,25 @@
             saveData();
             updateAttendanceRewards();
             updateButtonStates();
+            checkAttendanceRewards();
             alert(`${day}: 혜택을 받았습니다!`);
+        }
+
+        function checkAttendanceRewards() {
+            if (attendanceCount >= 3 && !rewardsGiven.a) {
+                rewardsGiven.a = true;
+                giftDetails.push({ day: '사은품A', detail: '사은품A 교환권', used: false, usedTime: null });
+                giftCount++;
+                alert('축하합니다! 3일 출석을 달성하여 사은품A 교환권을 획득했습니다!');
+            }
+            if (attendanceCount >= 5 && !rewardsGiven.b) {
+                rewardsGiven.b = true;
+                giftDetails.push({ day: '사은품B', detail: '사은품B 교환권', used: false, usedTime: null });
+                giftCount++;
+                alert('축하합니다! 5일 출석을 달성하여 사은품B 교환권을 획득했습니다!');
+            }
+            document.getElementById('gift-count').textContent = giftCount;
+            saveData();
         }
 
         function updateAttendanceRewards() {
@@ -238,6 +257,7 @@
             giftCount = 0;
             attendanceCount = 0;
             giftDetails = [];
+            rewardsGiven = { a: false, b: false };
             localStorage.clear();
             document.getElementById('gift-count').textContent = giftCount;
 
