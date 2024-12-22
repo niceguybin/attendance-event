@@ -31,6 +31,9 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .header h1 .year {
+            color: #fff;
+        }
         .header p {
             font-size: 1.2em;
             margin-top: 10px;
@@ -99,6 +102,7 @@
             display: flex;
             align-items: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
         }
         .gift-box span {
             margin-left: 10px;
@@ -111,6 +115,7 @@
     </style>
     <script>
         let giftCount = 0;
+        let giftDetails = [];
 
         function updateCountdown() {
             const eventDate = new Date('January 1, 2025 00:00:00').getTime();
@@ -127,9 +132,37 @@
             }
         }
 
-        function claimReward() {
+        function claimReward(day, detail) {
             giftCount++;
+            giftDetails.push({ day, detail, used: false });
             document.getElementById('gift-count').textContent = giftCount;
+            alert(`${day}: 혜택을 받았습니다!`);
+        }
+
+        function showGiftBox() {
+            let giftContent = '<h3>받은 혜택</h3><ul>';
+            giftDetails.forEach((gift, index) => {
+                giftContent += `<li>${gift.day} - ${gift.detail} ${gift.used ? '(사용완료)' : '<button onclick=\'useGift(' + index + ')\'>사용하기</button>'}</li>`;
+            });
+            giftContent += '</ul>';
+
+            const giftWindow = window.open('', 'GiftBox', 'width=400,height=600');
+            giftWindow.document.write(`
+                <html>
+                <head>
+                    <title>선물함</title>
+                </head>
+                <body>
+                    ${giftContent}
+                    <button onclick="window.close()">닫기</button>
+                </body>
+                </html>
+            `);
+        }
+
+        function useGift(index) {
+            giftDetails[index].used = true;
+            alert('쿠폰을 사용했습니다!');
         }
 
         const countdownInterval = setInterval(updateCountdown, 1000);
@@ -139,8 +172,8 @@
 
     <div class="header">
         <h1>
-            <span class="goodbye">GOODBYE 2024</span><br>
-            <span class="welcome">WELCOME 2025</span>
+            <span class="goodbye">GOODBYE <span class="year">2024</span></span><br>
+            <span class="welcome">WELCOME <span class="year">2025</span></span>
         </h1>
         <p>교보문고 영등포점 event</p>
     </div>
@@ -151,55 +184,55 @@
 
         <div class="event-days">
             <div class="day-card">
-                <h3>December 26</h3>
+                <h3>26일</h3>
                 <p>1만원 이상 구매시 스누피 미니타올 증정</p>
-                <button onclick="claimReward()">혜택받기</button>
+                <button onclick="claimReward('26일', '스누피 미니타올 증정')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>December 27</h3>
+                <h3>27일</h3>
                 <p>문구 1,000원 할인 쿠폰 사용기한(2025년 1월 3일)</p>
-                <button onclick="claimReward()">혜택받기</button>
+                <button onclick="claimReward('27일', '문구 할인 쿠폰')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>December 28</h3>
+                <h3>28일</h3>
                 <p>도서 10%할인(문화누리카드 중복 사용 불가)</p>
-                <button onclick="claimReward()">혜택받기</button>
+                <button onclick="claimReward('28일', '도서 10% 할인')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>December 29</h3>
+                <h3>29일</h3>
                 <p>도서교환권 1,000원 증정</p>
-                <button onclick="claimReward()">혜택받기</button>
+                <button onclick="claimReward('29일', '도서교환권 1,000원')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>December 30</h3>
+                <h3>30일</h3>
                 <p>Surprise Flash Sales</p>
-                <button onclick="claimReward()">혜택받기</button>
+                <button onclick="claimReward('30일', 'Surprise Flash Sales')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>December 31</h3>
+                <h3>31일</h3>
                 <p>Countdown Party</p>
-                <button onclick="claimReward()">혜택받기</button>
+                <button onclick="claimReward('31일', 'Countdown Party')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>January 1</h3>
+                <h3>1월 1일</h3>
                 <p>New Year Celebrations</p>
-                <button onclick="claimReward()">혜택받기</button>
+                <button onclick="claimReward('1월 1일', 'New Year Celebrations')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>January 2</h3>
+                <h3>1월 2일</h3>
                 <p>Customer Appreciation Day</p>
-                <button onclick="claimReward()">혜택받기</button>
+                <button onclick="claimReward('1월 2일', 'Customer Appreciation Day')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>January 3</h3>
+                <h3>1월 3일</h3>
                 <p>Grand Finale</p>
-                <button onclick="claimReward()">혜택받기</button>
+                <button onclick="claimReward('1월 3일', 'Grand Finale')">혜택받기</button>
             </div>
         </div>
     </div>
 
     <div id="countdown" class="countdown"></div>
-    <div class="gift-box">
+    <div class="gift-box" onclick="showGiftBox()">
         🎁 선물함 <span id="gift-count">0</span>
     </div>
 
