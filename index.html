@@ -14,7 +14,7 @@
             text-align: center;
         }
         .header {
-            padding: 80px 20px; /* Adjusted padding to reduce gap */
+            padding: 80px 20px;
         }
         .header h1 {
             font-size: 2.5em;
@@ -42,9 +42,9 @@
             padding: 20px;
         }
         .content h2 {
-            font-size: 1.2em; /* Adjusted to match the grid width */
-            margin: 20px auto; /* Centered with grid */
-            width: 90%; /* Approximate width of the grid */
+            font-size: 1.2em;
+            margin: 20px auto;
+            width: 90%;
             line-height: 1.5;
         }
         .content h2 span.highlight {
@@ -159,11 +159,36 @@
         let giftDetails = [];
         let attendanceCount = 0;
 
+        // Load data from localStorage on page load
+        window.onload = function() {
+            const savedGiftDetails = localStorage.getItem('giftDetails');
+            const savedAttendanceCount = localStorage.getItem('attendanceCount');
+
+            if (savedGiftDetails) {
+                giftDetails = JSON.parse(savedGiftDetails);
+                giftCount = giftDetails.length;
+                document.getElementById('gift-count').textContent = giftCount;
+            }
+
+            if (savedAttendanceCount) {
+                attendanceCount = parseInt(savedAttendanceCount, 10);
+            }
+
+            updateAttendanceRewards();
+        };
+
+        function saveData() {
+            localStorage.setItem('giftDetails', JSON.stringify(giftDetails));
+            localStorage.setItem('attendanceCount', attendanceCount.toString());
+        }
+
         function claimReward(day, detail) {
             giftCount++;
             attendanceCount++;
             giftDetails.push({ day, detail, used: false, usedTime: null });
             document.getElementById('gift-count').textContent = giftCount;
+
+            saveData();
             updateAttendanceRewards();
             alert(`${day}: 혜택을 받았습니다!`);
         }
@@ -198,6 +223,8 @@
             const time = `${now.getHours()}시 ${now.getMinutes()}분`;
             giftDetails[index].used = true;
             giftDetails[index].usedTime = time;
+
+            saveData(); // Save updated data
             alert('쿠폰을 사용했습니다!');
             toggleGiftBox();
             toggleGiftBox(); // Refresh the gift box content
