@@ -52,6 +52,19 @@
         .day-card p {
             font-size: 14px;
         }
+        .day-card button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 14px;
+            color: #fff;
+            background: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .day-card button:hover {
+            background: #45a049;
+        }
         .countdown {
             position: fixed;
             top: 20px;
@@ -63,25 +76,49 @@
             font-size: 16px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
+        .gift-box {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        .gift-box span {
+            margin-left: 10px;
+            background: #ff0000;
+            color: #fff;
+            font-size: 14px;
+            padding: 2px 5px;
+            border-radius: 50%;
+        }
     </style>
     <script>
+        let giftCount = 0;
+
         function updateCountdown() {
             const eventDate = new Date('January 1, 2025 00:00:00').getTime();
             const now = new Date().getTime();
             const distance = eventDate - now;
 
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById('countdown').innerHTML = 
-                `D-Day: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+            document.getElementById('countdown').innerHTML = `2025 D-${days}`;
 
             if (distance < 0) {
                 clearInterval(countdownInterval);
                 document.getElementById('countdown').innerHTML = "Happy New Year 2025!";
             }
+        }
+
+        function claimReward() {
+            giftCount++;
+            document.getElementById('gift-count').textContent = giftCount;
         }
 
         const countdownInterval = setInterval(updateCountdown, 1000);
@@ -91,7 +128,7 @@
 
     <div class="header">
         <h1>GOODBYE 2024, WELCOME 2025</h1>
-        <p>Join us in celebrating the transition from 2024 to 2025!</p>
+        <p>교보문고 영등포점 event</p>
     </div>
 
     <div class="content">
@@ -102,43 +139,55 @@
             <div class="day-card">
                 <h3>December 26</h3>
                 <p>Opening Ceremony & Special Discounts</p>
+                <button onclick="claimReward()">혜택받기</button>
             </div>
             <div class="day-card">
                 <h3>December 27</h3>
                 <p>Exclusive Member Offers</p>
+                <button onclick="claimReward()">혜택받기</button>
             </div>
             <div class="day-card">
                 <h3>December 28</h3>
                 <p>Family Day Activities</p>
+                <button onclick="claimReward()">혜택받기</button>
             </div>
             <div class="day-card">
                 <h3>December 29</h3>
                 <p>Special Gift Giveaways</p>
+                <button onclick="claimReward()">혜택받기</button>
             </div>
             <div class="day-card">
                 <h3>December 30</h3>
                 <p>Surprise Flash Sales</p>
+                <button onclick="claimReward()">혜택받기</button>
             </div>
             <div class="day-card">
                 <h3>December 31</h3>
                 <p>Countdown Party</p>
+                <button onclick="claimReward()">혜택받기</button>
             </div>
             <div class="day-card">
                 <h3>January 1</h3>
                 <p>New Year Celebrations</p>
+                <button onclick="claimReward()">혜택받기</button>
             </div>
             <div class="day-card">
                 <h3>January 2</h3>
                 <p>Customer Appreciation Day</p>
+                <button onclick="claimReward()">혜택받기</button>
             </div>
             <div class="day-card">
                 <h3>January 3</h3>
                 <p>Grand Finale</p>
+                <button onclick="claimReward()">혜택받기</button>
             </div>
         </div>
     </div>
 
     <div id="countdown" class="countdown"></div>
+    <div class="gift-box">
+        🎁 선물함 <span id="gift-count">0</span>
+    </div>
 
 </body>
 </html>
