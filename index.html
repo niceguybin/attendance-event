@@ -103,14 +103,43 @@
             align-items: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
             cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .gift-box span {
-            margin-left: 10px;
-            background: #ff0000;
+        .gift-box.expanded {
+            width: 80%;
+            height: 60%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
             color: #fff;
+            z-index: 1000;
+        }
+        .gift-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .gift-box ul li {
+            margin: 10px 0;
+        }
+        .close-btn {
+            margin-top: 20px;
+            padding: 10px;
             font-size: 14px;
-            padding: 2px 5px;
-            border-radius: 50%;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            background: #c0392b;
         }
     </style>
     <script>
@@ -118,7 +147,7 @@
         let giftDetails = [];
 
         function updateCountdown() {
-            const eventDate = new Date('January 1, 2025 00:00:00').getTime();
+            const eventDate = new Date('December 26, 2024 00:00:00').getTime();
             const now = new Date().getTime();
             const distance = eventDate - now;
 
@@ -139,30 +168,27 @@
             alert(`${day}: 혜택을 받았습니다!`);
         }
 
-        function showGiftBox() {
-            let giftContent = '<h3>받은 혜택</h3><ul>';
-            giftDetails.forEach((gift, index) => {
-                giftContent += `<li>${gift.day} - ${gift.detail} ${gift.used ? '(사용완료)' : '<button onclick=\'useGift(' + index + ')\'>사용하기</button>'}</li>`;
-            });
-            giftContent += '</ul>';
+        function toggleGiftBox() {
+            const giftBox = document.querySelector('.gift-box');
+            giftBox.classList.toggle('expanded');
 
-            const giftWindow = window.open('', 'GiftBox', 'width=400,height=600');
-            giftWindow.document.write(`
-                <html>
-                <head>
-                    <title>선물함</title>
-                </head>
-                <body>
-                    ${giftContent}
-                    <button onclick="window.close()">닫기</button>
-                </body>
-                </html>
-            `);
+            if (giftBox.classList.contains('expanded')) {
+                let giftContent = '<h3>받은 혜택</h3><ul>';
+                giftDetails.forEach((gift, index) => {
+                    giftContent += `<li>${gift.day} - ${gift.detail} ${gift.used ? '(사용완료)' : '<button onclick=\'useGift(' + index + ')\'>사용하기</button>'}</li>`;
+                });
+                giftContent += '</ul><button class="close-btn" onclick="toggleGiftBox()">닫기</button>';
+                giftBox.innerHTML = giftContent;
+            } else {
+                giftBox.innerHTML = `🎁 선물함 <span id="gift-count">${giftCount}</span>`;
+            }
         }
 
         function useGift(index) {
             giftDetails[index].used = true;
             alert('쿠폰을 사용했습니다!');
+            toggleGiftBox();
+            toggleGiftBox(); // Refresh the gift box content
         }
 
         const countdownInterval = setInterval(updateCountdown, 1000);
@@ -232,7 +258,7 @@
     </div>
 
     <div id="countdown" class="countdown"></div>
-    <div class="gift-box" onclick="showGiftBox()">
+    <div class="gift-box" onclick="toggleGiftBox()">
         🎁 선물함 <span id="gift-count">0</span>
     </div>
 
