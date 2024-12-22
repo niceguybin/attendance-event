@@ -14,7 +14,7 @@
             text-align: center;
         }
         .header {
-            padding: 40px 20px;
+            padding: 100px 20px; /* Adjusted padding to move the header down */
         }
         .header h1 {
             font-size: 2.5em;
@@ -83,17 +83,6 @@
         .day-card button:hover {
             background: #45a049;
         }
-        .countdown {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 16px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
         .gift-box {
             position: fixed;
             top: 20px;
@@ -160,21 +149,6 @@
         let giftCount = 0;
         let giftDetails = [];
 
-        function updateCountdown() {
-            const eventDate = new Date('December 26, 2024 00:00:00').getTime();
-            const now = new Date().getTime();
-            const distance = eventDate - now;
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-
-            document.getElementById('countdown').innerHTML = `2025 D-${days}`;
-
-            if (distance < 0) {
-                clearInterval(countdownInterval);
-                document.getElementById('countdown').innerHTML = "Happy New Year 2025!";
-            }
-        }
-
         function claimReward(day, detail) {
             giftCount++;
             giftDetails.push({ day, detail, used: false, usedTime: null });
@@ -207,8 +181,6 @@
             toggleGiftBox();
             toggleGiftBox(); // Refresh the gift box content
         }
-
-        const countdownInterval = setInterval(updateCountdown, 1000);
     </script>
 </head>
 <body>
@@ -273,7 +245,6 @@
         </div>
     </div>
 
-    <div id="countdown" class="countdown"></div>
     <div class="gift-box" onclick="toggleGiftBox()">
         🎁 선물함 <span id="gift-count">0</span>
     </div>
