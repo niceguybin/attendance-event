@@ -22,12 +22,12 @@
             line-height: 1.2;
         }
         .header h1 .goodbye {
-            background: linear-gradient(to right, #ff6e7f, #bfe9ff);
+            background: linear-gradient(to right, #4facfe, #00f2fe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .header h1 .welcome {
-            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            background: linear-gradient(to right, #ffb199, #ff0844);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -42,7 +42,7 @@
             padding: 20px;
         }
         .content h2 {
-            font-size: 2em;
+            font-size: 1.8em;
             margin-bottom: 20px;
         }
         .event-days {
@@ -175,7 +175,7 @@
             if (giftBox.classList.contains('expanded')) {
                 let giftContent = '<h3>받은 혜택</h3><ul>';
                 giftDetails.forEach((gift, index) => {
-                    giftContent += `<li>${gift.day} - ${gift.detail} ${gift.used ? '(사용완료)' : '<button onclick=\'useGift(' + index + ')\'>사용하기</button>'}</li>`;
+                    giftContent += `<li>${gift.day} - ${gift.detail} ${gift.used ? '(사용완료)' : '<button onclick='useGift(' + index + ')'>사용하기</button>'}</li>`;
                 });
                 giftContent += '</ul><button class="close-btn" onclick="toggleGiftBox()">닫기</button>';
                 giftBox.innerHTML = giftContent;
@@ -205,39 +205,38 @@
     </div>
 
     <div class="content">
-        <h2>Event Highlights</h2>
-        <p>Celebrate the new year with exciting activities and special rewards every day!</p>
+        <h2>9일간의 혜택 매일 매일 새로운 혜택을 받으세요</h2>
 
         <div class="event-days">
             <div class="day-card">
-                <h3>26일</h3>
+                <h3>12월 26일</h3>
                 <p>1만원 이상 구매시 스누피 미니타올 증정</p>
-                <button onclick="claimReward('26일', '스누피 미니타올 증정')">혜택받기</button>
+                <button onclick="claimReward('12월 26일', '스누피 미니타올 증정')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>27일</h3>
+                <h3>12월 27일</h3>
                 <p>문구 1,000원 할인 쿠폰 사용기한(2025년 1월 3일)</p>
-                <button onclick="claimReward('27일', '문구 할인 쿠폰')">혜택받기</button>
+                <button onclick="claimReward('12월 27일', '문구 할인 쿠폰')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>28일</h3>
+                <h3>12월 28일</h3>
                 <p>도서 10%할인(문화누리카드 중복 사용 불가)</p>
-                <button onclick="claimReward('28일', '도서 10% 할인')">혜택받기</button>
+                <button onclick="claimReward('12월 28일', '도서 10% 할인')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>29일</h3>
+                <h3>12월 29일</h3>
                 <p>도서교환권 1,000원 증정</p>
-                <button onclick="claimReward('29일', '도서교환권 1,000원')">혜택받기</button>
+                <button onclick="claimReward('12월 29일', '도서교환권 1,000원')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>30일</h3>
+                <h3>12월 30일</h3>
                 <p>Surprise Flash Sales</p>
-                <button onclick="claimReward('30일', 'Surprise Flash Sales')">혜택받기</button>
+                <button onclick="claimReward('12월 30일', 'Surprise Flash Sales')">혜택받기</button>
             </div>
             <div class="day-card">
-                <h3>31일</h3>
+                <h3>12월 31일</h3>
                 <p>Countdown Party</p>
-                <button onclick="claimReward('31일', 'Countdown Party')">혜택받기</button>
+                <button onclick="claimReward('12월 31일', 'Countdown Party')">혜택받기</button>
             </div>
             <div class="day-card">
                 <h3>1월 1일</h3>
