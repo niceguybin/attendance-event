@@ -42,7 +42,7 @@
             padding: 20px;
         }
         .content h2 {
-            font-size: 1.8em;
+            font-size: 0.25em; /* Reduced to 1/7 of its current size */
             margin-bottom: 20px;
         }
         .content h2 span.highlight {
@@ -51,29 +51,29 @@
         .event-days {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            gap: 10px; /* Reduced gap */
             margin-top: 20px;
         }
         .day-card {
             background: rgba(255, 255, 255, 0.2);
             border: none;
             border-radius: 10px;
-            padding: 15px;
+            padding: 10px; /* Reduced padding */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             color: #000;
-            font-size: 14px;
+            font-size: 12px; /* Reduced font size */
         }
         .day-card h3 {
             margin: 10px 0;
-            font-size: 14px;
+            font-size: 12px; /* Reduced font size */
         }
         .day-card p {
-            font-size: 12px;
+            font-size: 10px; /* Reduced font size */
         }
         .day-card button {
             margin-top: 10px;
-            padding: 8px;
-            font-size: 12px;
+            padding: 6px; /* Reduced padding */
+            font-size: 10px; /* Reduced font size */
             color: #fff;
             background: #4CAF50;
             border: none;
@@ -261,7 +261,6 @@
                 <button onclick="claimReward('1월 1일', 'New Year Celebrations')">혜택받기</button>
             </div>
             <div class="day-card">
-                        <div class="day-card">
                 <h3>1월 2일</h3>
                 <p>Customer Appreciation Day</p>
                 <button onclick="claimReward('1월 2일', 'Customer Appreciation Day')">혜택받기</button>
