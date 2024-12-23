@@ -22,12 +22,12 @@
             line-height: 1.2;
         }
         .header h1 .goodbye {
-            background: linear-gradient(to right, #4facfe, #00f2fe);
+            background: linear-gradient(to right, #32CD32, #008000); /* Green shades */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .header h1 .welcome {
-            background: linear-gradient(to right, #ffb199, #ff0844);
+            background: linear-gradient(to right, #ffffff, #d3d3d3, #000000); /* White to black shades */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -153,6 +153,19 @@
             text-align: left;
             padding: 0 15px;
         }
+        .reset-button {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 14px;
+            background: #ff4500;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .reset-button:hover {
+            background: #ff6347;
+        }
     </style>
     <script>
         let giftCount = 0;
@@ -187,10 +200,10 @@
             attendanceCount++;
             giftDetails.push({ day, detail, used: false, usedTime: null });
             document.getElementById('gift-count').textContent = giftCount;
+            alert(`${day}: 혜택을 받았습니다!`);
 
             saveData();
             updateAttendanceRewards();
-            alert(`${day}: 혜택을 받았습니다!`);
         }
 
         function updateAttendanceRewards() {
@@ -200,6 +213,18 @@
                 <p>2. 5일간 출석 시 사은품B 증정</p>
                 <p>현재 출석일: ${attendanceCount}일</p>
             `;
+        }
+
+        function resetData() {
+            if (confirm("모든 데이터를 초기화하시겠습니까?")) {
+                giftCount = 0;
+                attendanceCount = 0;
+                giftDetails = [];
+                saveData();
+                document.getElementById('gift-count').textContent = giftCount;
+                updateAttendanceRewards();
+                alert("데이터가 초기화되었습니다.");
+            }
         }
 
         function toggleGiftBox() {
@@ -223,7 +248,6 @@
             const time = `${now.getHours()}시 ${now.getMinutes()}분`;
             giftDetails[index].used = true;
             giftDetails[index].usedTime = time;
-
             saveData();
             alert('쿠폰을 사용했습니다!');
             toggleGiftBox();
@@ -295,6 +319,8 @@
         <div id="attendance-rewards" class="attendance-rewards">
             <!-- Attendance rewards will be updated dynamically -->
         </div>
+
+        <button class="reset-button" onclick="resetData()">초기화</button>
     </div>
 
     <div class="gift-box" onclick="toggleGiftBox()">
